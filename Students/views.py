@@ -101,6 +101,8 @@ def edit_profile(request):
     context = {
         "form": form,
         "student_id": student.student_id,
+        "first_name": student.first_name,
+        "last_name": student.last_name,
     }
     
     return render(request, "students/edit_profile.html", context)

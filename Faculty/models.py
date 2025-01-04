@@ -1,0 +1,55 @@
+from django.db import models
+from django.contrib.auth.models import User
+from django.db.models.signals import pre_save, post_save, pre_delete
+from django.dispatch import receiver
+
+
+class Faculty(models.Model):
+    faculty_id = models.CharField(max_length=8, unique=True, blank=True)
+    first_name = models.CharField(max_length=100)
+    last_name = models.CharField(max_length=100)
+    email = models.EmailField(unique=True)
+    phone_number = models.CharField(max_length=15)
+    password = models.CharField(max_length=100)
+
+    def __str__(self):
+        return f"{self.faculty_id} - {self.first_name} {self.last_name}"
+
+    class Meta:
+        verbose_name = "Faculty"
+        verbose_name_plural = "Faculty"
+
+
+@receiver(pre_save, sender=Faculty)
+def generate_faculty_id(sender, instance, **kwargs):
+    if not instance.faculty_id:
+        # Get last faculty record
+        last_faculty = Faculty.objects.order_by("-faculty_id").first()
+
+        if last_faculty:
+            # Extract number from last ID and increment
+            last_number = int(last_faculty.faculty_id.split("-")[1])
+            new_number = last_number + 1
+        else:
+            new_number = 1
+
+        # Format new faculty ID
+        instance.faculty_id = f"FAC-{new_number:04d}"
+
+
+@receiver(post_save, sender=Faculty)
+def create_user_account(sender, instance, created, **kwargs):
+    if created:
+        User.objects.create_user(
+            username=instance.faculty_id,
+            password=instance.password,
+        )
+
+
+@receiver(pre_delete, sender=Faculty)
+def delete_user_account(sender, instance, **kwargs):
+    try:
+        user = User.objects.get(username=instance.faculty_id)
+        user.delete()
+    except User.DoesNotExist:
+        pass

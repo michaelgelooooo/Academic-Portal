@@ -1,0 +1,84 @@
+{% extends 'base/faculty_base.html' %}
+
+{% load static %}
+
+{% block title %}Profile{% endblock %}
+
+{% block content %}
+<main>
+    <div class="container p-5">
+        {% if messages %}
+        <div class="mt-3">
+            {% for message in messages %}
+            <div class="alert alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags }}{% endif %} alert-dismissible fade show"
+                role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card mb-2">
+                    <div class="card-header d-flex justify-content-center p-5">
+                        <img class="img-fluid rounded-circle" src="{% static 'images/blank.jpg' %}" alt="Faculty">
+                    </div>
+                    <div class="card-body">
+                        <p class="card-text"><span class="fw-bold">Faculty ID: </span>{{ faculty_id }}</p>
+                        <p class="card-text"><span class="fw-bold">Year Level: </span></p>
+                        <p class="card-text"><span class="fw-bold">Section: </span></p>
+                    </div>
+                    <div class="card-footer d-flex justify-content-center">
+                        <button class="btn btn-info">
+                            <i class="fa-solid fa-camera me-2"></i>Change Photo
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-8">
+                <div class="card mb-2">
+                    <div class="card-header">
+                        <i class="fa-solid fa-circle-user fs-4"></i>
+                        <span class="fs-6 ms-2">Faculty Information</span>
+                    </div>
+
+                    <div class="card-body">
+                        <div class="form-group mb-3">
+                            <label class="form-label">First Name</label>
+                            <input type="text" class="form-control" value="{{ first_name }}" readonly>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label class="form-label">Last Name</label>
+                            <input type="text" class="form-control" value="{{ last_name }}" readonly>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label class="form-label">Email</label>
+                            <input type="email" class="form-control" value="{{ email }}" readonly>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label class="form-label">Phone Number</label>
+                            <input type="tel" class="form-control" value="{{ phone_number }}" readonly>
+                        </div>
+                    </div>
+
+                    <div class="card-footer d-flex justify-content-start gap-2">
+                        <a href="{% url 'faculty-edit-profile' %}" class="btn btn-info">
+                            <i class="fa-solid fa-pen-to-square me-2"></i>Edit
+                        </a>
+                        <form method="post" action="{% url 'faculty-logout' %}" class="m-0">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger">
+                                <i class="fa-solid fa-right-from-bracket me-2"></i>Logout
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+{% endblock %}
