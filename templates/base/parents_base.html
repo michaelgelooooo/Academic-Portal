@@ -6,7 +6,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Student | {% block title %}{% endblock %}</title>
+    <title>Parent | {% block title %}{% endblock %}</title>
 
     <link rel="icon" href="{% static 'images/logo.png' %}" type="image/x-icon">
 
@@ -20,7 +20,7 @@
 
 <body>
     {% if not '-login' in request.resolver_match.url_name|default:'' %}
-    <nav class="navbar navbar-expand-lg bg-success shadow-lg sticky-top">
+    <nav class="navbar navbar-expand-lg bg-primary shadow-lg sticky-top">
         <div class="container-fluid px-5 py-2">
             <button class="btn btn-rounded btn-outline-light border-3" type="button" data-bs-toggle="offcanvas"
                 data-bs-target="#offcanvasWithBothOptions">
@@ -28,11 +28,11 @@
             </button>
 
             <div class="navbar-nav ms-auto">
-                <a class="nav-link d-flex align-items-center" aria-current="page" href="{% url 'student-profile' %}">
-                    <i class="fa-solid fa-circle-user text-light fs-2"></i>
+                <a class="nav-link d-flex align-items-center" aria-current="page" href="{% url 'parent-profile' %}">
+                    <i class="fa-solid fa-circle-user text-white fs-2"></i>
                     <div class="d-none d-md-inline ms-2">
-                        <div class="text-light lh-1">{{ first_name }} {{ last_name }}</div>
-                        <div class="text-secondary lh-1">{{ student_id }}</div>
+                        <div class="text-white lh-1">{{ first_name }} {{ last_name }}</div>
+                        <div class="text-secondary lh-1">{{ parent_id }}</div>
                     </div>
                 </a>
             </div>
@@ -53,19 +53,13 @@
 
         <div class="mt-5">
             <div class="list-group">
-                <a href="{% url 'student-dashboard' %}" class="list-group-item list-group-item-action p-4">
+                <a href="{% url 'parent-dashboard' %}" class="list-group-item list-group-item-action p-4">
                     <i class="fa-solid fa-display me-2"></i>Dashboard
                 </a>
-                <a href="{% url 'student-subjects' %}" class="list-group-item list-group-item-action p-4">
-                    <i class="fa-solid fa-book me-2"></i>Subjects
+                <a href="{% url 'parent-family' %}" class="list-group-item list-group-item-action p-4">
+                    <i class="fa-solid fa-people-roof me-2"></i>Family
                 </a>
-                <a href="{% url 'student-schedule' %}" class="list-group-item list-group-item-action p-4">
-                    <i class="fa-solid fa-calendar me-2"></i>Schedule
-                </a>
-                <a href="{% url 'student-grades' %}" class="list-group-item list-group-item-action p-4">
-                    <i class="fa-solid fa-rectangle-list me-2"></i>Grades
-                </a>
-                <a href="{% url 'student-chat' %}" class="list-group-item list-group-item-action p-4">
+                <a href="{% url 'parent-chat' %}" class="list-group-item list-group-item-action p-4">
                     <i class="fa-solid fa-message me-2"></i>Chat
                 </a>
             </div>
@@ -73,7 +67,7 @@
 
         <div class="mt-auto">
             <div class="list-group">
-                <form method="post" action="{% url 'student-logout' %}">
+                <form method="post" action="{% url 'parent-logout' %}">
                     {% csrf_token %}
                     <button type="submit" class="list-group-item list-group-item-action text-danger w-100 text-start p-4">
                         <i class="fa-solid fa-right-from-bracket me-2"></i>Logout

@@ -1,4 +1,4 @@
-{% extends 'base/faculty_base.html' %}
+{% extends 'base/parents_base.html' %}
 
 {% load static %}
 
@@ -23,13 +23,13 @@
             <div class="col-md-4">
                 <div class="card mb-2">
                     <div class="card-header d-flex justify-content-center p-5">
-                        <img class="img-fluid rounded-circle" src="{% static 'images/blank.jpg' %}" alt="Faculty">
+                        <img class="img-fluid rounded-circle" src="{% static 'images/blank.jpg' %}" alt="Parent">
                     </div>
                     <div class="card-body">
-                        <p class="card-text"><span class="fw-bold">Faculty ID: </span>{{ faculty_id }}</p>
+                        <p class="card-text"><span class="fw-bold">Parent ID: </span>{{ parent_id }}</p>
                     </div>
                     <div class="card-footer d-flex justify-content-center">
-                        <button class="btn btn-dark">
+                        <button class="btn btn-primary">
                             <i class="fa-solid fa-camera me-2"></i>Change Photo
                         </button>
                     </div>
@@ -40,11 +40,11 @@
                 <div class="card mb-2">
                     <div class="card-header">
                         <i class="fa-solid fa-circle-user fs-4"></i>
-                        <span class="fs-6 ms-2">Faculty Information</span>
+                        <span class="fs-6 ms-2">Parent Information</span>
                     </div>
 
                     <div class="card-body">
-                        <form method="POST" id="faculty-edit-profile">
+                        <form method="POST" id="parent-edit-profile">
                             {% csrf_token %}
                             {% for field in form %}
                             <div class="form-group mb-3">
@@ -61,10 +61,10 @@
                     </div>
 
                     <div class="card-footer d-flex justify-content-start gap-2">
-                        <button type="submit" form="faculty-edit-profile" class="btn btn-dark">
+                        <button type="submit" form="parent-edit-profile" class="btn btn-primary">
                             <i class="fa-solid fa-floppy-disk me-2"></i>Save
                         </button>
-                        <a href="{% url 'faculty-profile' %}" class="btn btn-secondary">
+                        <a href="{% url 'parent-profile' %}" class="btn btn-secondary">
                             <i class="fa-solid fa-xmark me-2"></i>Cancel
                         </a>
                     </div>

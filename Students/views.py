@@ -9,6 +9,10 @@ from .models import Student
 # Create your views here.
 @login_required(login_url="student-login")
 def dashboard(request):
+    if not request.user.username.startswith("STU-"):
+        messages.error(request, "Only student accounts can access this page")
+        return redirect("student-login")
+    
     student = Student.objects.get(student_id=request.user.username)
 
     context = {
@@ -22,6 +26,10 @@ def dashboard(request):
 
 @login_required(login_url="student-login")
 def subjects(request):
+    if not request.user.username.startswith("STU-"):
+        messages.error(request, "Only student accounts can access this page")
+        return redirect("student-login")
+    
     student = Student.objects.get(student_id=request.user.username)
 
     context = {
@@ -35,6 +43,10 @@ def subjects(request):
 
 @login_required(login_url="student-login")
 def schedule(request):
+    if not request.user.username.startswith("STU-"):
+        messages.error(request, "Only student accounts can access this page")
+        return redirect("student-login")
+    
     student = Student.objects.get(student_id=request.user.username)
 
     context = {
@@ -48,6 +60,10 @@ def schedule(request):
 
 @login_required(login_url="student-login")
 def grades(request):
+    if not request.user.username.startswith("STU-"):
+        messages.error(request, "Only student accounts can access this page")
+        return redirect("student-login")
+    
     student = Student.objects.get(student_id=request.user.username)
 
     context = {
@@ -60,6 +76,10 @@ def grades(request):
 
 @login_required(login_url="student-login")
 def chat(request):
+    if not request.user.username.startswith("STU-"):
+        messages.error(request, "Only student accounts can access this page")
+        return redirect("student-login")
+    
     student = Student.objects.get(student_id=request.user.username)
 
     context = {
@@ -73,6 +93,10 @@ def chat(request):
 
 @login_required(login_url="student-login")
 def profile(request):
+    if not request.user.username.startswith("STU-"):
+        messages.error(request, "Only student accounts can access this page")
+        return redirect("student-login")
+    
     student = Student.objects.get(student_id=request.user.username)
 
     context = {
@@ -87,6 +111,10 @@ def profile(request):
 
 @login_required(login_url="student-login")
 def edit_profile(request):
+    if not request.user.username.startswith("STU-"):
+        messages.error(request, "Only student accounts can access this page")
+        return redirect("student-login")
+    
     student = Student.objects.get(student_id=request.user.username)
     
     if request.method == "POST":
@@ -108,9 +136,9 @@ def edit_profile(request):
     return render(request, "students/edit_profile.html", context)
 
 def login(request):
-    if request.user.is_authenticated:
+    if request.user.is_authenticated and request.user.username.startswith("STU-"):
         return redirect("student-dashboard")
-
+    
     if request.method == "POST":
         form = LoginForm(request.POST)
         if form.is_valid():

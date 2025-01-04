@@ -9,6 +9,10 @@ from .models import Faculty
 # Create your views here.
 @login_required(login_url="faculty-login")
 def dashboard(request):
+    if not request.user.username.startswith("FAC-"):
+        messages.error(request, "Only faculty accounts can access this page")
+        return redirect("faculty-login")
+    
     faculty = Faculty.objects.get(faculty_id=request.user.username)
 
     context = {
@@ -22,6 +26,10 @@ def dashboard(request):
 
 @login_required(login_url="faculty-login")
 def schedule(request):
+    if not request.user.username.startswith("FAC-"):
+        messages.error(request, "Only faculty accounts can access this page")
+        return redirect("faculty-login")
+    
     faculty = Faculty.objects.get(faculty_id=request.user.username)
 
     context = {
@@ -35,6 +43,10 @@ def schedule(request):
 
 @login_required(login_url="faculty-login")
 def chat(request):
+    if not request.user.username.startswith("FAC-"):
+        messages.error(request, "Only faculty accounts can access this page")
+        return redirect("faculty-login")
+    
     faculty = Faculty.objects.get(faculty_id=request.user.username)
 
     context = {
@@ -48,6 +60,10 @@ def chat(request):
 
 @login_required(login_url="faculty-login")
 def profile(request):
+    if not request.user.username.startswith("FAC-"):
+        messages.error(request, "Only faculty accounts can access this page")
+        return redirect("faculty-login")
+    
     faculty = Faculty.objects.get(faculty_id=request.user.username)
 
     context = {
@@ -62,6 +78,10 @@ def profile(request):
 
 @login_required(login_url="faculty-login")
 def edit_profile(request):
+    if not request.user.username.startswith("FAC-"):
+        messages.error(request, "Only faculty accounts can access this page")
+        return redirect("faculty-login")
+    
     faculty = Faculty.objects.get(faculty_id=request.user.username)
     
     if request.method == "POST":
@@ -83,7 +103,7 @@ def edit_profile(request):
     return render(request, "faculty/edit_profile.html", context)
 
 def login(request):
-    if request.user.is_authenticated:
+    if request.user.is_authenticated and request.user.username.startswith("FAC-"):
         return redirect("faculty-dashboard")
 
     if request.method == "POST":

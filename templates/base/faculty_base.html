@@ -6,33 +6,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Student | {% block title %}{% endblock %}</title>
+    <title>Faculty | {% block title %}{% endblock %}</title>
 
     <link rel="icon" href="{% static 'images/logo.png' %}" type="image/x-icon">
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootswatch@5.3.2/dist/zephyr/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootswatch@5.3.2/dist/sandstone/bootstrap.min.css" rel="stylesheet">
 
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
 
 <body>
     {% if not '-login' in request.resolver_match.url_name|default:'' %}
-    <nav class="navbar navbar-expand-lg bg-info shadow-lg sticky-top">
-        <div class="container-fluid px-5">
-            <button class="btn btn-rounded btn-outline-dark border-3" type="button" data-bs-toggle="offcanvas"
+    <nav class="navbar navbar-expand-lg bg-dark shadow-lg sticky-top">
+        <div class="container-fluid px-5 py-2">
+            <button class="btn btn-rounded btn-outline-light border-3" type="button" data-bs-toggle="offcanvas"
                 data-bs-target="#offcanvasWithBothOptions">
                 <i class="fa-solid fa-bars fs-4"></i>
             </button>
 
             <div class="navbar-nav ms-auto">
                 <a class="nav-link d-flex align-items-center" aria-current="page" href="{% url 'faculty-profile' %}">
-                    <i class="fa-solid fa-circle-user fs-2"></i>
+                    <i class="fa-solid fa-circle-user text-white fs-2"></i>
                     <div class="d-none d-md-inline ms-2">
-                        <div class="lh-1">{{ first_name }} {{ last_name }}</div>
-                        <div class="text-muted lh-1">{{ faculty_id }}</div>
+                        <div class="text-white lh-1">{{ first_name }} {{ last_name }}</div>
+                        <div class="text-secondary lh-1">{{ faculty_id }}</div>
                     </div>
                 </a>
             </div>
@@ -53,13 +53,13 @@
 
         <div class="mt-5">
             <div class="list-group">
-                <a href="{% url 'faculty-dashboard' %}" class="list-group-item list-group-item-action">
+                <a href="{% url 'faculty-dashboard' %}" class="list-group-item list-group-item-action p-4">
                     <i class="fa-solid fa-display me-2"></i>Dashboard
                 </a>
-                <a href="{% url 'faculty-schedule' %}" class="list-group-item list-group-item-action">
+                <a href="{% url 'faculty-schedule' %}" class="list-group-item list-group-item-action p-4">
                     <i class="fa-solid fa-calendar me-2"></i>Schedule
                 </a>
-                <a href="{% url 'faculty-chat' %}" class="list-group-item list-group-item-action">
+                <a href="{% url 'faculty-chat' %}" class="list-group-item list-group-item-action p-4">
                     <i class="fa-solid fa-message me-2"></i>Chat
                 </a>
             </div>
@@ -69,7 +69,7 @@
             <div class="list-group">
                 <form method="post" action="{% url 'faculty-logout' %}">
                     {% csrf_token %}
-                    <button type="submit" class="list-group-item list-group-item-action text-danger w-100 text-start">
+                    <button type="submit" class="list-group-item list-group-item-action text-danger w-100 text-start p-4">
                         <i class="fa-solid fa-right-from-bracket me-2"></i>Logout
                     </button>
                 </form>

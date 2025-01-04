@@ -1,0 +1,38 @@
+{% extends 'base/parents_base.html' %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<main>
+    <div class="container p-5">
+        {% if messages %}
+        <div class="container mt-3">
+            {% for message in messages %}
+            <div class="alert alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags }}{% endif %} alert-dismissible fade show"
+                role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        
+        <h1>Parent Dashboard</h1>
+
+        <div class="row g-4 mt-2">
+            <div class="col-md-4">
+                <a href="{% url 'parent-family' %}" class="text-decoration-none">
+                    <div class="card h-100 shadow-sm hover-card">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">
+                                <i class="fa-solid fa-people-roof me-2"></i>
+                                Family
+                            </h5>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock %}
