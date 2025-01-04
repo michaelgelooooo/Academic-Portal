@@ -2,7 +2,7 @@
 
 {% load static %}
 
-{% block title %}Profile{% endblock %}
+{% block title %}Edit Profile{% endblock %}
 
 {% block content %}
 <main>
@@ -46,34 +46,29 @@
                     </div>
 
                     <div class="card-body">
-                        <div class="form-group mb-3">
-                            <label class="form-label">First Name</label>
-                            <input type="text" class="form-control" value="{{ first_name }}" readonly>
-                        </div>
-                        <div class="form-group mb-3">
-                            <label class="form-label">Last Name</label>
-                            <input type="text" class="form-control" value="{{ last_name }}" readonly>
-                        </div>
-                        <div class="form-group mb-3">
-                            <label class="form-label">Email</label>
-                            <input type="email" class="form-control" value="{{ email }}" readonly>
-                        </div>
-                        <div class="form-group mb-3">
-                            <label class="form-label">Phone Number</label>
-                            <input type="tel" class="form-control" value="{{ phone_number }}" readonly>
-                        </div>
+                        <form method="POST" id="student-edit-profile">
+                            {% csrf_token %}
+                            {% for field in form %}
+                            <div class="form-group mb-3">
+                                <label class="form-label text-capitalize">{{ field.label }}</label>
+                                {{ field }}
+                                {% if field.errors %}
+                                <div class="alert alert-danger mt-1">
+                                    {{ field.errors }}
+                                </div>
+                                {% endif %}
+                            </div>
+                            {% endfor %}
+                        </form>
                     </div>
 
                     <div class="card-footer d-flex justify-content-start gap-2">
-                        <a href="{% url 'student-edit-profile' %}" class="btn btn-success">
-                            <i class="fa-solid fa-pen-to-square me-2"></i>Edit
+                        <button type="submit" form="student-edit-profile" class="btn btn-success">
+                            <i class="fa-solid fa-floppy-disk me-2"></i>Save
+                        </button>
+                        <a href="{% url 'student-profile' %}" class="btn btn-secondary">
+                            <i class="fa-solid fa-xmark me-2"></i>Cancel
                         </a>
-                        <form method="post" action="{% url 'student-logout' %}" class="m-0">
-                            {% csrf_token %}
-                            <button type="submit" class="btn btn-danger">
-                                <i class="fa-solid fa-right-from-bracket me-2"></i>Logout
-                            </button>
-                        </form>
                     </div>
                 </div>
             </div>
