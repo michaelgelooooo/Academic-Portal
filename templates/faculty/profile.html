@@ -23,15 +23,10 @@
             <div class="col-md-4">
                 <div class="card mb-2">
                     <div class="card-header d-flex justify-content-center p-5">
-                        <img class="img-fluid rounded-circle" src="{% static 'images/blank.jpg' %}" alt="Faculty">
+                        <img class="img-fluid rounded-circle" src="{{ profile_pic.url }}" alt="Faculty">
                     </div>
                     <div class="card-body">
                         <p class="card-text"><span class="fw-bold">Faculty ID: </span>{{ faculty_id }}</p>
-                    </div>
-                    <div class="card-footer d-flex justify-content-center">
-                        <button class="btn btn-dark">
-                            <i class="fa-solid fa-camera me-2"></i>Change Photo
-                        </button>
                     </div>
                 </div>
             </div>

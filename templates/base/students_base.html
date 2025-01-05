@@ -16,6 +16,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootswatch@5.3.2/dist/sandstone/bootstrap.min.css" rel="stylesheet">
 
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <script src="{% static 'js/script.js' %}"></script>
 </head>
 
 <body>
@@ -29,7 +30,7 @@
 
             <div class="navbar-nav ms-auto">
                 <a class="nav-link d-flex align-items-center" aria-current="page" href="{% url 'student-profile' %}">
-                    <i class="fa-solid fa-circle-user text-light fs-2"></i>
+                    <img src="{{ profile_pic.url }}" alt="Student Profile" class="img-fluid rounded-circle" width="40">
                     <div class="d-none d-md-inline ms-2">
                         <div class="text-light lh-1">{{ first_name }} {{ last_name }}</div>
                         <div class="text-secondary lh-1">{{ student_id }}</div>

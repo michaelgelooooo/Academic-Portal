@@ -8,6 +8,7 @@ urlpatterns = [
     path('chat/', views.chat, name='parent-chat'),
     path('profile/', views.profile, name='parent-profile'),
     path('profile/edit', views.edit_profile, name='parent-edit-profile'),
+    path('profile/update-pic/', views.update_profile_pic, name='parent-update-profile-pic'),
     path('login/', views.login, name='parent-login'),
     path('logout/', LogoutView.as_view(next_page='parent-login'), name='parent-logout'),
 ]

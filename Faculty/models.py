@@ -2,6 +2,14 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import pre_save, post_save, pre_delete
 from django.dispatch import receiver
+from datetime import datetime
+import os
+
+
+def profile_pic_path(instance, filename):
+    ext = filename.split(".")[-1]
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    return f"profile_pictures/faculty/{instance.faculty_id}_{timestamp}.{ext}"
 
 
 class Faculty(models.Model):
@@ -11,6 +19,24 @@ class Faculty(models.Model):
     email = models.EmailField(unique=True)
     phone_number = models.CharField(max_length=15)
     password = models.CharField(max_length=100)
+    profile_pic = models.ImageField(
+        upload_to=profile_pic_path,
+        default="profile_pictures/blank.jpg",
+        blank=True,
+    )
+
+    def save(self, *args, **kwargs):
+        if self.pk:
+            try:
+                old_instance = Faculty.objects.get(pk=self.pk)
+                if old_instance.profile_pic != self.profile_pic:
+                    if os.path.exists(
+                        old_instance.profile_pic.path
+                    ) and not old_instance.profile_pic.path.endswith("blank.jpg"):
+                        os.remove(old_instance.profile_pic.path)
+            except Faculty.DoesNotExist:
+                pass
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return f"{self.faculty_id} - {self.first_name} {self.last_name}"

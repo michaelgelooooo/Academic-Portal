@@ -4,6 +4,11 @@ from django.contrib.auth import authenticate, login as auth_login
 from django.contrib import messages
 from .forms import LoginForm, EditProfileForm
 from .models import Parent
+from PIL import Image
+from io import BytesIO
+import sys
+import logging
+from django.core.files.uploadedfile import InMemoryUploadedFile
 
 
 # Create your views here.
@@ -19,6 +24,7 @@ def dashboard(request):
         "parent_id": parent.parent_id,
         "first_name": parent.first_name,
         "last_name": parent.last_name,
+        "profile_pic": parent.profile_pic,
     }
 
     return render(request, "parents/dashboard.html", context)
@@ -36,6 +42,7 @@ def family(request):
         "parent_id": parent.parent_id,
         "first_name": parent.first_name,
         "last_name": parent.last_name,
+        "profile_pic": parent.profile_pic,
     }
 
     return render(request, "parents/family.html", context)
@@ -53,6 +60,7 @@ def chat(request):
         "parent_id": parent.parent_id,
         "first_name": parent.first_name,
         "last_name": parent.last_name,
+        "profile_pic": parent.profile_pic,
     }
 
     return render(request, "parents/chat.html", context)
@@ -72,6 +80,7 @@ def profile(request):
         "last_name": parent.last_name,
         "email": parent.email,
         "phone_number": parent.phone_number,
+        "profile_pic": parent.profile_pic,
     }
 
     return render(request, "parents/profile.html", context)
@@ -98,9 +107,90 @@ def edit_profile(request):
         "parent_id": parent.parent_id,
         "first_name": parent.first_name,
         "last_name": parent.last_name,
+        "profile_pic": parent.profile_pic,
     }
     
     return render(request, "parents/edit_profile.html", context)
+
+
+logger = logging.getLogger(__name__)
+
+
+def crop_square_image(image):
+    try:
+        # Convert to RGB if needed
+        if image.mode != "RGB":
+            image = image.convert("RGB")
+
+        # Get dimensions
+        width, height = image.size
+        crop_size = min(width, height)
+
+        # Center crop
+        left = (width - crop_size) // 2
+        top = (height - crop_size) // 2
+        right = left + crop_size
+        bottom = top + crop_size
+
+        image = image.crop((left, top, right, bottom))
+        image = image.resize((300, 300), Image.Resampling.LANCZOS)
+        return image
+    except Exception as e:
+        logger.error(f"Image processing error: {str(e)}")
+        return None
+
+
+@login_required(login_url="parent-login")
+def update_profile_pic(request):
+    try:
+        if not request.user.username.startswith("PAR-"):
+            messages.error(request, "Only parent accounts can access this page")
+            return redirect("parent-login")
+
+        if request.method == "POST" and request.FILES.get("profile_pic"):
+            parent = Parent.objects.get(parent_id=request.user.username)
+            upload = request.FILES["profile_pic"]
+
+            # Validate file
+            if not upload.content_type.startswith("image"):
+                messages.error(request, "Please upload a valid image file")
+                return redirect("parent-profile")
+
+            # Process image
+            img = Image.open(upload)
+            processed_img = crop_square_image(img)
+
+            if processed_img:
+                # Save processed image
+                output = BytesIO()
+                processed_img.save(output, format="JPEG", quality=90)
+                output.seek(0)
+
+                # Create new file
+                processed_file = InMemoryUploadedFile(
+                    output,
+                    "ImageField",
+                    f"{upload.name.split('.')[0]}.jpg",
+                    "image/jpeg",
+                    sys.getsizeof(output),
+                    None,
+                )
+
+                parent.profile_pic = processed_file
+                parent.save()
+                messages.success(request, "Profile picture updated successfully!")
+            else:
+                messages.error(request, "Error processing image")
+        else:
+            messages.error(request, "No image file provided")
+
+        return redirect("parent-profile")
+
+    except Exception as e:
+        logger.error(f"Profile pic update error: {str(e)}")
+        messages.error(request, "Error updating profile picture")
+        return redirect("parent-profile")
+
 
 def login(request):
     if request.user.is_authenticated and request.user.username.startswith("PAR-"):
