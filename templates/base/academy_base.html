@@ -36,12 +36,58 @@
         </div>
     </nav>
 
-    <main class="bg-image">
-        <div class="container p-5">
+    <main>
             {% block content %}
             {% endblock %}
-        </div>
     </main>
+
+    <footer class="bg-light text-dark py-4 mt-auto">
+        <div class="container">
+            <div class="row mb-4">
+                <div class="col-12 text-center">
+                    <a href="{% url 'index' %}">
+                        <img src="{% static 'images/navbar_logo.png' %}" alt="SJABI Logo" style="width: 250px;">
+                    </a>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4 mb-3">
+                    <div class="d-flex justify-content-center">
+                        <div>
+                            <h5 class="text-primary">Quick Links</h5 class="text-primary">
+                            <ul class="list-unstyled">
+                                <li><a href="{% url 'index' %}" class="text-dark text-decoration-none">Home</a></li>
+                                <li><a href="{% url 'about' %}" class="text-dark text-decoration-none">About</a></li>
+                                <li><a href="#" class="text-dark text-decoration-none">Administration</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <div class="d-flex justify-content-center">
+                        <div>
+                            <h5 class="text-primary">Contact Info</h5 class="text-primary">
+                            <ul class="list-unstyled">
+                                <li><i class="fa-solid fa-location-dot"></i> Arellano St.</li>
+                                <li><i class="fa-solid fa-envelope"></i> sjabibarugo@gmail.com</li>
+                                <li><i class="fa-solid fa-phone"></i> 09876543210</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <div class="d-flex justify-content-center">
+                        <div>
+                            <h5 class="text-primary">Follow Us</h5 class="text-primary">
+                            <ul class="list-unstyled">
+                                <li><a href="#" class="text-dark text-decoration-none"><i class="fa-brands fa-facebook me-2"></i>SJABI Barugo</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"

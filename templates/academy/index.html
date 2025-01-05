@@ -3,34 +3,69 @@
 {% block title %}Home{% endblock %}
 
 {% block content %}
+<div class="background-container">
+    <div class="content container py-5">
+        <!-- Hero Section -->
+        <div class="row align-items-center mb-5">
+            <div class="col-lg-8 mx-auto text-center">
+                <h1 class="fs-3 fw-bold text-primary mb-3">Welcome to</h1>
+                <h1 class="display-5 fw-bold text-primary mb-3">St. Joseph Academy of Barugo Inc.</h1>
+                <p class="lead text-muted mb-5">Access your personalized portal to begin your educational journey</p>
+            </div>
+        </div>
 
-<div class="row">
-    <div class="col-lg-8">
-        <h1>Landing Page</h1>
-        <div class="row g-4 mt-2">
-            <div class="col-md-4">
+        <!-- Portal Cards Section -->
+        <div class="row g-4 justify-content-center">
+            <!-- Student Portal Card -->
+            <div class="col-md-4 col-lg-3">
                 <a href="{% url 'student-login' %}" class="text-decoration-none">
-                    <div class="card h-100 shadow-sm hover-card">
-                        <div class="card-body text-center">
-                            <h5 class="card-title">Student Portal</h5>
+                    <div class="card h-100 shadow-sm">
+                        <div class="card-body text-center p-4">
+                            <div class="mb-4 display-4 text-success">
+                                <i class="fa-solid fa-graduation-cap"></i>
+                            </div>
+                            <h5 class="card-title fw-bold mb-3">Student Portal</h5>
+                            <p class="card-text text-muted">Access your courses, assignments, and grades</p>
+                            <div class="mt-3">
+                                <button class="btn btn-outline-success rounded-pill">Enter Portal</button>
+                            </div>
                         </div>
                     </div>
                 </a>
             </div>
-            <div class="col-md-4">
+
+            <!-- Faculty Portal Card -->
+            <div class="col-md-4 col-lg-3">
                 <a href="{% url 'faculty-login' %}" class="text-decoration-none">
-                    <div class="card h-100 shadow-sm hover-card">
-                        <div class="card-body text-center">
-                            <h5 class="card-title">Faculty Portal</h5>
+                    <div class="card h-100 shadow-sm">
+                        <div class="card-body text-center p-4">
+                            <div class="mb-4 display-4 text-dark">
+                                <i class="fa-solid fa-chalkboard-user"></i>
+                            </div>
+                            <h5 class="card-title fw-bold mb-3">Faculty Portal</h5>
+                            <p class="card-text text-muted">Manage your classes and student progress</p>
+                            <div class="mt-3">
+                                <button class="btn btn-outline-dark rounded-pill">Enter Portal</button>
+                            </div>
                         </div>
                     </div>
                 </a>
             </div>
-            <div class="col-md-4">
+
+            <!-- Parent Portal Card -->
+            <div class="col-md-4 col-lg-3">
                 <a href="{% url 'parent-login' %}" class="text-decoration-none">
-                    <div class="card h-100 shadow-sm hover-card">
-                        <div class="card-body text-center">
-                            <h5 class="card-title">Parent Portal</h5>
+                    <div class="card h-100 shadow-sm">
+                        <div class="card-body text-center p-4">
+                            <div class="mb-4 display-4 text-primary">
+                                <i class="fa-solid fa-people-roof"></i>
+                                <i class="bi bi-people-fill"></i>
+                            </div>
+                            <h5 class="card-title fw-bold mb-3">Parent Portal</h5>
+                            <p class="card-text text-muted">Monitor your child's academic progress</p>
+                            <div class="mt-3">
+                                <button class="btn btn-outline-primary rounded-pill">Enter Portal</button>
+                            </div>
                         </div>
                     </div>
                 </a>

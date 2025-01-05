@@ -8,6 +8,15 @@
     background-position: center;
 }
 
+.background-container {
+    background: linear-gradient(rgba(255, 255, 255, 0.75), rgba(255, 255, 255, 0.75)), url('../images/background.jpg');
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    min-height: 100vh;
+}
+
 .bg-image.no-nav {
     top: 0;
     left: 0;
