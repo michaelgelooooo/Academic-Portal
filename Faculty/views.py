@@ -260,7 +260,7 @@ def login(request):
 
                     # Create log entry after successful login
                     UserAccessLogs.objects.create(
-                        user_id=faculty_id, user_type="Faculty", log_type="Login"
+                        user_name=faculty_id, user_type="Faculty", log_type="Login"
                     )
 
                     return redirect("faculty-dashboard")
@@ -286,7 +286,7 @@ def logout(request):
         auth_logout(request)
 
         UserAccessLogs.objects.create(
-            user_id=faculty_id, user_type="Faculty", log_type="Logout"
+            user_name=faculty_id, user_type="Faculty", log_type="Logout"
         )
 
     return redirect("faculty-login")

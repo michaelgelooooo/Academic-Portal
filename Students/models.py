@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.db.models.signals import pre_save, post_save, pre_delete
 from django.dispatch import receiver
 from datetime import datetime
+from Academy.models import UserAccountLogs
 import os
 
 
@@ -39,7 +40,7 @@ class Student(models.Model):
                         user.save()
                     except User.DoesNotExist:
                         pass
-                        
+
                 # Existing profile pic handling
                 if old_instance.profile_pic != self.profile_pic:
                     if os.path.exists(
@@ -48,7 +49,7 @@ class Student(models.Model):
                         os.remove(old_instance.profile_pic.path)
             except Student.DoesNotExist:
                 pass
-                
+
         super().save(*args, **kwargs)
 
     def __str__(self):
@@ -84,11 +85,45 @@ def create_user_account(sender, instance, created, **kwargs):
             password=instance.password,
         )
 
+        UserAccountLogs.objects.create(
+            user_name=instance.student_id, user_type="Student", log_type="Created"
+        )
+
 
 @receiver(pre_delete, sender=Student)
 def delete_user_account(sender, instance, **kwargs):
+    """Delete the associated User when a Student is deleted"""
     try:
-        user = User.objects.get(username=instance.student_id)
-        user.delete()
+        # Add a flag to the instance to prevent recursive deletion
+        if not hasattr(instance, "_user_being_deleted"):
+            user = User.objects.get(username=instance.student_id)
+            # Set flag on user to prevent recursive deletion
+            user._student_being_deleted = True
+
+            UserAccountLogs.objects.create(
+                user_name=instance.student_id, user_type="Student", log_type="Deleted"
+            )
+
+            user.delete()
+
     except User.DoesNotExist:
+        pass
+
+
+@receiver(pre_delete, sender=User)
+def delete_student_record(sender, instance, **kwargs):
+    """Delete the associated Student when a User is deleted"""
+    try:
+        # Only delete the student if this deletion didn't come from the student deletion
+        if not hasattr(instance, "_student_being_deleted"):
+            student = Student.objects.get(student_id=instance.username)
+            # Set flag on student to prevent recursive deletion
+            student._user_being_deleted = True
+
+            UserAccountLogs.objects.create(
+                user_name=instance.username, user_type="Student", log_type="Deleted"
+            )
+
+            student.delete()
+    except Student.DoesNotExist:
         pass

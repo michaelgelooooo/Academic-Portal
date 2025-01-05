@@ -260,7 +260,7 @@ def login(request):
 
                     # Create log entry after successful login
                     UserAccessLogs.objects.create(
-                        user_id=parent_id, user_type="Parent", log_type="Login"
+                        user_name=parent_id, user_type="Parent", log_type="Login"
                     )
 
                     return redirect("parent-dashboard")
@@ -286,7 +286,7 @@ def logout(request):
         auth_logout(request)
 
         UserAccessLogs.objects.create(
-            user_id=parent_id, user_type="Parent", log_type="Logout"
+            user_name=parent_id, user_type="Parent", log_type="Logout"
         )
 
     return redirect("parent-login")

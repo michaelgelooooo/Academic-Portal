@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.db.models.signals import pre_save, post_save, pre_delete
 from django.dispatch import receiver
 from datetime import datetime
+from Academy.models import UserAccountLogs
 import os
 
 
@@ -84,11 +85,44 @@ def create_user_account(sender, instance, created, **kwargs):
             password=instance.password,
         )
 
+        UserAccountLogs.objects.create(
+            user_name=instance.faculty_id, user_type="Faculty", log_type="Created"
+        )
+
 
 @receiver(pre_delete, sender=Faculty)
 def delete_user_account(sender, instance, **kwargs):
+    """Delete the associated User when a Faculty is deleted"""
     try:
-        user = User.objects.get(username=instance.faculty_id)
-        user.delete()
+        # Add a flag to the instance to prevent recursive deletion
+        if not hasattr(instance, "_user_being_deleted"):
+            user = User.objects.get(username=instance.faculty_id)
+            # Set flag on user to prevent recursive deletion
+            user._faculty_being_deleted = True
+
+            UserAccountLogs.objects.create(
+                user_name=instance.faculty_id, user_type="Faculty", log_type="Deleted"
+            )
+
+            user.delete()
     except User.DoesNotExist:
+        pass
+
+
+@receiver(pre_delete, sender=User)
+def delete_faculty_record(sender, instance, **kwargs):
+    """Delete the associated Faculty when a User is deleted"""
+    try:
+        # Only delete the faculty if this deletion didn't come from the faculty deletion
+        if not hasattr(instance, "_faculty_being_deleted"):
+            faculty = Faculty.objects.get(faculty_id=instance.username)
+            # Set flag on faculty to prevent recursive deletion
+            faculty._user_being_deleted = True
+
+            UserAccountLogs.objects.create(
+                user_name=instance.username, user_type="Faculty", log_type="Deleted"
+            )
+
+            faculty.delete()
+    except Faculty.DoesNotExist:
         pass

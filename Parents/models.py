@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.db.models.signals import pre_save, post_save, pre_delete
 from django.dispatch import receiver
 from datetime import datetime
+from Academy.models import UserAccountLogs
 import os
 
 
@@ -84,11 +85,44 @@ def create_user_account(sender, instance, created, **kwargs):
             password=instance.password,
         )
 
+        UserAccountLogs.objects.create(
+            user_name=instance.parent_id, user_type="Parent", log_type="Created"
+        )
+
 
 @receiver(pre_delete, sender=Parent)
 def delete_user_account(sender, instance, **kwargs):
+    """Delete the associated User when a Parent is deleted"""
     try:
-        user = User.objects.get(username=instance.parent_id)
-        user.delete()
+        # Add a flag to the instance to prevent recursive deletion
+        if not hasattr(instance, "_user_being_deleted"):
+            user = User.objects.get(username=instance.parent_id)
+            # Set flag on user to prevent recursive deletion
+            user._parent_being_deleted = True
+
+            UserAccountLogs.objects.create(
+                user_name=instance.parent_id, user_type="Parent", log_type="Deleted"
+            )
+
+            user.delete()
     except User.DoesNotExist:
+        pass
+
+
+@receiver(pre_delete, sender=User)
+def delete_parent_record(sender, instance, **kwargs):
+    """Delete the associated Parent when a User is deleted"""
+    try:
+        # Only delete the parent if this deletion didn't come from the parent deletion
+        if not hasattr(instance, "_parent_being_deleted"):
+            parent = Parent.objects.get(parent_id=instance.username)
+            # Set flag on parent to prevent recursive deletion
+            parent._user_being_deleted = True
+
+            UserAccountLogs.objects.create(
+                user_name=instance.username, user_type="Parent", log_type="Deleted"
+            )
+
+            parent.delete()
+    except Parent.DoesNotExist:
         pass
