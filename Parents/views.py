@@ -1,9 +1,15 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth import authenticate, login as auth_login, update_session_auth_hash
+from django.contrib.auth import (
+    authenticate,
+    login as auth_login,
+    logout as auth_logout,
+    update_session_auth_hash,
+)
 from django.contrib import messages
 from .forms import LoginForm, EditProfileForm
 from .models import Parent
+from Academy.models import UserAccessLogs
 from PIL import Image
 from io import BytesIO
 import sys
@@ -251,6 +257,12 @@ def login(request):
                     messages.error(request, "Only parent accounts can login here")
                 else:
                     auth_login(request, user)
+
+                    # Create log entry after successful login
+                    UserAccessLogs.objects.create(
+                        user_id=parent_id, user_type="Parent", log_type="Login"
+                    )
+
                     return redirect("parent-dashboard")
             else:
                 messages.error(request, "Invalid parent ID or password")
@@ -260,3 +272,21 @@ def login(request):
     context = {"form": form}
 
     return render(request, "parents/login.html", context)
+
+
+@login_required(login_url="parent-login")
+def logout(request):
+    if not request.user.username.startswith("PAR-"):
+        messages.error(request, "Only parent accounts can access this page")
+        return redirect("parent-login")
+    
+    parent_id = request.user.username
+    
+    if request.method == "POST":
+        auth_logout(request)
+
+        UserAccessLogs.objects.create(
+            user_id=parent_id, user_type="Parent", log_type="Logout"
+        )
+
+    return redirect("parent-login")

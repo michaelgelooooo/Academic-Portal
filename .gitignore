@@ -6557,3 +6557,6 @@ Students/migrations/__pycache__/0002_student_profile_pic.cpython-312.pyc
 Students/migrations/__pycache__/0003_alter_student_profile_pic.cpython-312.pyc
 Students/migrations/__pycache__/0004_alter_student_profile_pic.cpython-312.pyc
 Parents/migrations/__pycache__/0002_parent_profile_pic.cpython-312.pyc
+Academy/migrations/__pycache__/0001_initial.cpython-312.pyc
+Academy/migrations/__pycache__/0002_alter_useraccesslogs_user_id.cpython-312.pyc
+Academy/migrations/__pycache__/0003_alter_useraccesslogs_options_and_more.cpython-312.pyc

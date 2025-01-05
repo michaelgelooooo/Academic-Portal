@@ -1,9 +1,15 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth import authenticate, login as auth_login, update_session_auth_hash
+from django.contrib.auth import (
+    authenticate,
+    login as auth_login,
+    logout as auth_logout,
+    update_session_auth_hash,
+)
 from django.contrib import messages
 from .forms import LoginForm, EditProfileForm
 from .models import Faculty
+from Academy.models import UserAccessLogs
 from PIL import Image
 from io import BytesIO
 import sys
@@ -191,7 +197,7 @@ def update_profile_pic(request):
         logger.error(f"Profile pic update error: {str(e)}")
         messages.error(request, "Error updating profile picture")
         return redirect("faculty-profile")
-    
+
 
 @login_required(login_url="faculty-login")
 def update_password(request):
@@ -251,6 +257,12 @@ def login(request):
                     messages.error(request, "Only faculty accounts can login here")
                 else:
                     auth_login(request, user)
+
+                    # Create log entry after successful login
+                    UserAccessLogs.objects.create(
+                        user_id=faculty_id, user_type="Faculty", log_type="Login"
+                    )
+
                     return redirect("faculty-dashboard")
             else:
                 messages.error(request, "Invalid faculty ID or password")
@@ -260,3 +272,21 @@ def login(request):
     context = {"form": form}
 
     return render(request, "faculty/login.html", context)
+
+
+@login_required(login_url="faculty-login")
+def logout(request):
+    if not request.user.username.startswith("FAC-"):
+        messages.error(request, "Only faculty accounts can access this page")
+        return redirect("faculty-login")
+    
+    faculty_id = request.user.username
+    
+    if request.method == "POST":
+        auth_logout(request)
+
+        UserAccessLogs.objects.create(
+            user_id=faculty_id, user_type="Faculty", log_type="Logout"
+        )
+
+    return redirect("faculty-login")

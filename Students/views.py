@@ -3,11 +3,13 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import (
     authenticate,
     login as auth_login,
+    logout as auth_logout,
     update_session_auth_hash,
 )
 from django.contrib import messages
 from .forms import LoginForm, EditProfileForm
 from .models import Student
+from Academy.models import UserAccessLogs
 from PIL import Image
 from io import BytesIO
 import sys
@@ -290,6 +292,12 @@ def login(request):
                     messages.error(request, "Only student accounts can login here")
                 else:
                     auth_login(request, user)
+
+                    # Create log entry after successful login
+                    UserAccessLogs.objects.create(
+                        user_id=student_id, user_type="Student", log_type="Login"
+                    )
+
                     return redirect("student-dashboard")
             else:
                 messages.error(request, "Invalid student ID or password")
@@ -299,3 +307,24 @@ def login(request):
     context = {"form": form}
 
     return render(request, "students/login.html", context)
+
+
+@login_required(login_url="student-login")
+def logout(request):
+    if not request.user.username.startswith("STU-"):
+        messages.error(request, "Only student accounts can access this page")
+        return redirect("student-login")
+    
+    student_id = request.user.username
+    
+    if request.method == "POST":
+        auth_logout(request)
+
+        UserAccessLogs.objects.create(
+            user_id=student_id, user_type="Student", log_type="Logout"
+        )
+    # else:
+    #     messages.error(request, "Invalid request method")
+    #     return redirect("student-dashboard")
+
+    return redirect("student-login")
