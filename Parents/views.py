@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth import authenticate, login as auth_login
+from django.contrib.auth import authenticate, login as auth_login, update_session_auth_hash
 from django.contrib import messages
 from .forms import LoginForm, EditProfileForm
 from .models import Parent
@@ -17,7 +17,7 @@ def dashboard(request):
     if not request.user.username.startswith("PAR-"):
         messages.error(request, "Only parent accounts can access this page")
         return redirect("parent-login")
-    
+
     parent = Parent.objects.get(parent_id=request.user.username)
 
     context = {
@@ -35,7 +35,7 @@ def family(request):
     if not request.user.username.startswith("PAR-"):
         messages.error(request, "Only parent accounts can access this page")
         return redirect("parent-login")
-    
+
     parent = Parent.objects.get(parent_id=request.user.username)
 
     context = {
@@ -53,7 +53,7 @@ def chat(request):
     if not request.user.username.startswith("PAR-"):
         messages.error(request, "Only parent accounts can access this page")
         return redirect("parent-login")
-    
+
     parent = Parent.objects.get(parent_id=request.user.username)
 
     context = {
@@ -71,7 +71,7 @@ def profile(request):
     if not request.user.username.startswith("PAR-"):
         messages.error(request, "Only parent accounts can access this page")
         return redirect("parent-login")
-    
+
     parent = Parent.objects.get(parent_id=request.user.username)
 
     context = {
@@ -85,14 +85,15 @@ def profile(request):
 
     return render(request, "parents/profile.html", context)
 
+
 @login_required(login_url="parent-login")
 def edit_profile(request):
     if not request.user.username.startswith("PAR-"):
         messages.error(request, "Only parent accounts can access this page")
         return redirect("parent-login")
-    
+
     parent = Parent.objects.get(parent_id=request.user.username)
-    
+
     if request.method == "POST":
         form = EditProfileForm(request.POST, instance=parent)
         if form.is_valid():
@@ -101,7 +102,7 @@ def edit_profile(request):
             return redirect("parent-profile")
     else:
         form = EditProfileForm(instance=parent)
-    
+
     context = {
         "form": form,
         "parent_id": parent.parent_id,
@@ -109,7 +110,7 @@ def edit_profile(request):
         "last_name": parent.last_name,
         "profile_pic": parent.profile_pic,
     }
-    
+
     return render(request, "parents/edit_profile.html", context)
 
 
@@ -190,6 +191,48 @@ def update_profile_pic(request):
         logger.error(f"Profile pic update error: {str(e)}")
         messages.error(request, "Error updating profile picture")
         return redirect("parent-profile")
+
+
+@login_required(login_url="parent-login")
+def update_password(request):
+    if not request.user.username.startswith("PAR-"):
+        messages.error(request, "Only parent accounts can access this page")
+        return redirect("parent-login")
+
+    if request.method == "POST":
+        new_password = request.POST.get("new_password")
+        confirm_password = request.POST.get("confirm_password")
+
+        if new_password != confirm_password:
+            messages.error(request, "Passwords do not match")
+            return redirect("parent-profile")
+
+        if len(new_password) < 8:
+            messages.error(request, "Password must be at least 8 characters long")
+            return redirect("parent-profile")
+
+        try:
+            # Get both Parent and User instances
+            parent = Parent.objects.get(parent_id=request.user.username)
+            user = request.user
+
+            # Update password in both models
+            parent.password = new_password
+            user.set_password(new_password)
+
+            # Save both models
+            parent.save()
+            user.save()
+
+            # Update session auth hash AFTER saving
+            update_session_auth_hash(request, user)
+            messages.success(request, "Password updated successfully!")
+
+        except Exception as e:
+            logger.error(f"Password update error: {str(e)}")
+            messages.error(request, "Error updating password")
+
+    return redirect("parent-profile")
 
 
 def login(request):

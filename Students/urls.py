@@ -11,6 +11,7 @@ urlpatterns = [
     path('profile/', views.profile, name='student-profile'),
     path('profile/edit/', views.edit_profile, name='student-edit-profile'),
     path('profile/update-pic/', views.update_profile_pic, name='student-update-profile-pic'),
+    path('profile/update-password/', views.update_password, name='student-update-password'),
     path('login/', views.login, name='student-login'),
     path('logout/', LogoutView.as_view(next_page='student-login'), name='student-logout'),
 ]

@@ -34,7 +34,7 @@ class Faculty(models.Model):
                 if old_instance.password != self.password:
                     # Update Django User password
                     try:
-                        user = User.objects.get(username=self.student_id)
+                        user = User.objects.get(username=self.faculty_id)
                         user.set_password(self.password)
                         user.save()
                     except User.DoesNotExist:

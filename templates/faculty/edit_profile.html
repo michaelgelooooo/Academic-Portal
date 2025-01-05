@@ -33,7 +33,7 @@
                             data-bs-target="#profilePicModalFaculty">
                             <i class="fa-solid fa-camera me-2"></i>Edit Photo
                         </button>
-                        <button class="btn btn-dark w-100 flex-lg-fill">
+                        <button class="btn btn-dark w-100 flex-lg-fill" data-bs-toggle="modal" data-bs-target="#changePasswordModalFaculty">
                             <i class="fa-solid fa-key me-2"></i>Edit Password
                         </button>
                     </div>
@@ -67,6 +67,41 @@
                                         <button type="button" class="btn btn-secondary w-100"
                                             data-bs-dismiss="modal">Cancel</button>
                                         <button type="submit" class="btn btn-dark w-100">Save Changes</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal fade" id="changePasswordModalFaculty" tabindex="-1">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="changePasswordModalFacultyLabel">Change Password</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <form method="POST" action="{% url 'faculty-update-password' %}">
+                            {% csrf_token %}
+                            <div class="modal-body">
+                                <div class="mb-3">
+                                    <label for="newPassword" class="form-label">New Password</label>
+                                    <input type="password" class="form-control" id="newPassword" name="new_password" 
+                                        required minlength="8">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="confirmPassword" class="form-label">Confirm Password</label>
+                                    <input type="password" class="form-control" id="confirmPassword" name="confirm_password" 
+                                        required minlength="8">
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <div class="col-6">
+                                    <div class="d-flex justify-content-end gap-2">
+                                        <button type="button" class="btn btn-secondary w-100"
+                                            data-bs-dismiss="modal">Cancel</button>
+                                        <button type="submit" class="btn btn-dark w-100">Save</button>
                                     </div>
                                 </div>
                             </div>

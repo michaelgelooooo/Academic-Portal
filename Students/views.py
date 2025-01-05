@@ -1,6 +1,10 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth import authenticate, login as auth_login
+from django.contrib.auth import (
+    authenticate,
+    login as auth_login,
+    update_session_auth_hash,
+)
 from django.contrib import messages
 from .forms import LoginForm, EditProfileForm
 from .models import Student
@@ -226,6 +230,48 @@ def update_profile_pic(request):
         logger.error(f"Profile pic update error: {str(e)}")
         messages.error(request, "Error updating profile picture")
         return redirect("student-profile")
+
+
+@login_required(login_url="student-login")
+def update_password(request):
+    if not request.user.username.startswith("STU-"):
+        messages.error(request, "Only student accounts can access this page")
+        return redirect("student-login")
+
+    if request.method == "POST":
+        new_password = request.POST.get("new_password")
+        confirm_password = request.POST.get("confirm_password")
+
+        if new_password != confirm_password:
+            messages.error(request, "Passwords do not match")
+            return redirect("student-profile")
+
+        if len(new_password) < 8:
+            messages.error(request, "Password must be at least 8 characters long")
+            return redirect("student-profile")
+
+        try:
+            # Get both Student and User instances
+            student = Student.objects.get(student_id=request.user.username)
+            user = request.user
+
+            # Update password in both models
+            student.password = new_password
+            user.set_password(new_password)
+
+            # Save both models
+            student.save()
+            user.save()
+
+            # Update session auth hash AFTER saving
+            update_session_auth_hash(request, user)
+            messages.success(request, "Password updated successfully!")
+
+        except Exception as e:
+            logger.error(f"Password update error: {str(e)}")
+            messages.error(request, "Error updating password")
+
+    return redirect("student-profile")
 
 
 def login(request):
