@@ -28,9 +28,13 @@
                     <div class="card-body">
                         <p class="card-text"><span class="fw-bold">Faculty ID: </span>{{ faculty_id }}</p>
                     </div>
-                    <div class="card-footer d-flex justify-content-center">
-                        <button class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#profilePicModalFaculty">
-                            <i class="fa-solid fa-camera me-2"></i>Change Photo
+                    <div class="card-footer d-flex flex-column flex-lg-row justify-content-center gap-2">
+                        <button class="btn btn-dark w-100 flex-lg-fill" data-bs-toggle="modal"
+                            data-bs-target="#profilePicModalFaculty">
+                            <i class="fa-solid fa-camera me-2"></i>Edit Photo
+                        </button>
+                        <button class="btn btn-dark w-100 flex-lg-fill">
+                            <i class="fa-solid fa-key me-2"></i>Edit Password
                         </button>
                     </div>
                 </div>
@@ -43,20 +47,28 @@
                             <h5 class="modal-title">Update Profile Picture</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                         </div>
-                        <form method="POST" enctype="multipart/form-data" action="{% url 'faculty-update-profile-pic' %}">
+                        <form method="POST" enctype="multipart/form-data"
+                            action="{% url 'faculty-update-profile-pic' %}">
                             {% csrf_token %}
                             <div class="modal-body">
                                 <div class="mb-3">
                                     <label for="profilePicInputFaculty" class="form-label">Choose Image</label>
-                                    <input type="file" class="form-control" id="profilePicInputFaculty" name="profile_pic" accept="image/*">
+                                    <input type="file" class="form-control" id="profilePicInputFaculty"
+                                        name="profile_pic" accept="image/*">
                                 </div>
                                 <div class="d-flex justify-content-center">
-                                    <img id="imagePreviewFaculty" class="img-fluid" style="max-width: 200px; display: none;">
+                                    <img id="imagePreviewFaculty" class="img-fluid"
+                                        style="max-width: 200px; display: none;">
                                 </div>
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                                <button type="submit" class="btn btn-dark">Save Changes</button>
+                                <div class="col-6">
+                                    <div class="d-flex justify-content-end gap-2">
+                                        <button type="button" class="btn btn-secondary w-100"
+                                            data-bs-dismiss="modal">Cancel</button>
+                                        <button type="submit" class="btn btn-dark w-100">Save Changes</button>
+                                    </div>
+                                </div>
                             </div>
                         </form>
                     </div>
@@ -87,13 +99,17 @@
                         </form>
                     </div>
 
-                    <div class="card-footer d-flex justify-content-start gap-2">
-                        <button type="submit" form="faculty-edit-profile" class="btn btn-dark">
-                            <i class="fa-solid fa-floppy-disk me-2"></i>Save
-                        </button>
-                        <a href="{% url 'faculty-profile' %}" class="btn btn-secondary">
-                            <i class="fa-solid fa-xmark me-2"></i>Cancel
-                        </a>
+                    <div class="card-footer">
+                        <div class="col-lg-6">
+                            <div class="d-flex justify-content-start gap-2">
+                                <button type="submit" form="faculty-edit-profile" class="btn btn-dark w-100">
+                                    <i class="fa-solid fa-floppy-disk me-2"></i>Save
+                                </button>
+                                <a href="{% url 'faculty-profile' %}" class="btn btn-secondary w-100">
+                                    <i class="fa-solid fa-xmark me-2"></i>Cancel
+                                </a>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

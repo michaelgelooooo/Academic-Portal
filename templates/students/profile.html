@@ -33,7 +33,7 @@
                 </div>
             </div>
 
-            
+
 
             <div class="col-md-8">
                 <div class="card mb-2">
@@ -61,16 +61,20 @@
                         </div>
                     </div>
 
-                    <div class="card-footer d-flex justify-content-start gap-2">
-                        <a href="{% url 'student-edit-profile' %}" class="btn btn-success">
-                            <i class="fa-solid fa-pen-to-square me-2"></i>Edit
-                        </a>
-                        <form method="post" action="{% url 'student-logout' %}" class="m-0">
-                            {% csrf_token %}
-                            <button type="submit" class="btn btn-danger">
-                                <i class="fa-solid fa-right-from-bracket me-2"></i>Logout
-                            </button>
-                        </form>
+                    <div class="card-footer">
+                        <div class="col-lg-6">
+                            <div class="d-flex justify-content-start gap-2">
+                                <a href="{% url 'student-edit-profile' %}" class="btn btn-success w-100">
+                                    <i class="fa-solid fa-pen-to-square me-2"></i>Edit
+                                </a>
+                                <form method="post" action="{% url 'student-logout' %}" class="w-100">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-danger w-100">
+                                        <i class="fa-solid fa-right-from-bracket me-2"></i>Logout
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

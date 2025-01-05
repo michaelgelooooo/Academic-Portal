@@ -26,9 +26,21 @@ class Parent(models.Model):
     )
 
     def save(self, *args, **kwargs):
+        # Handle profile picture changes
         if self.pk:
             try:
                 old_instance = Parent.objects.get(pk=self.pk)
+                # Check if password was changed
+                if old_instance.password != self.password:
+                    # Update Django User password
+                    try:
+                        user = User.objects.get(username=self.parent_id)
+                        user.set_password(self.password)
+                        user.save()
+                    except User.DoesNotExist:
+                        pass
+                        
+                # Existing profile pic handling
                 if old_instance.profile_pic != self.profile_pic:
                     if os.path.exists(
                         old_instance.profile_pic.path
@@ -36,6 +48,7 @@ class Parent(models.Model):
                         os.remove(old_instance.profile_pic.path)
             except Parent.DoesNotExist:
                 pass
+                
         super().save(*args, **kwargs)
 
     def __str__(self):
