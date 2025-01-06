@@ -10,6 +10,7 @@ from django.contrib import messages
 from .forms import LoginForm, EditProfileForm
 from .models import Student
 from Academy.models import UserAccessLogs
+from Faculty.models import Subjects
 from PIL import Image
 from io import BytesIO
 import sys
@@ -43,12 +44,14 @@ def subjects(request):
         return redirect("student-login")
 
     student = Student.objects.get(student_id=request.user.username)
+    subjects = Subjects.objects.filter(year_level=student.year_level)
 
     context = {
         "student_id": student.student_id,
         "first_name": student.first_name,
         "last_name": student.last_name,
         "profile_pic": student.profile_pic,
+        "subjects": subjects,
     }
 
     return render(request, "students/subjects.html", context)
@@ -119,6 +122,7 @@ def profile(request):
         "student_id": student.student_id,
         "first_name": student.first_name,
         "last_name": student.last_name,
+        "year_level": student.year_level,
         "email": student.email,
         "phone_number": student.phone_number,
         "profile_pic": student.profile_pic,
@@ -149,6 +153,7 @@ def edit_profile(request):
         "student_id": student.student_id,
         "first_name": student.first_name,
         "last_name": student.last_name,
+        "year_level": student.year_level,
         "profile_pic": student.profile_pic,
     }
 

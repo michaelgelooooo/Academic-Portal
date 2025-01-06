@@ -8,8 +8,9 @@ from django.contrib.auth import (
 )
 from django.contrib import messages
 from .forms import LoginForm, EditProfileForm
-from .models import Faculty
+from .models import Faculty, Subjects
 from Academy.models import UserAccessLogs
+from Students.models import YearLevel
 from PIL import Image
 from io import BytesIO
 import sys
@@ -34,6 +35,28 @@ def dashboard(request):
     }
 
     return render(request, "faculty/dashboard.html", context)
+
+
+@login_required(login_url="faculty-login")
+def subjects(request):
+    if not request.user.username.startswith("FAC-"):
+        messages.error(request, "Only faculty accounts can access this page")
+        return redirect("faculty-login")
+
+    faculty = Faculty.objects.get(faculty_id=request.user.username)
+    year_levels = YearLevel.objects.all()
+    subjects = Subjects.objects.filter(instructor=faculty)
+
+    context = {
+        "faculty_id": faculty.faculty_id,
+        "first_name": faculty.first_name,
+        "last_name": faculty.last_name,
+        "profile_pic": faculty.profile_pic,
+        "year_levels": year_levels,
+        "subjects": subjects,
+    }
+
+    return render(request, "faculty/subjects.html", context)
 
 
 @login_required(login_url="faculty-login")

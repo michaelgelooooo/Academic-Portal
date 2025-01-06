@@ -6564,3 +6564,9 @@ Academy/migrations/__pycache__/0004_useraccountlogs_and_more.cpython-312.pyc
 Academy/migrations/__pycache__/0005_rename_log_type_useraccesslogs_action_and_more.cpython-312.pyc
 Academy/migrations/__pycache__/0006_useraccountlogs_action_by.cpython-312.pyc
 Academy/migrations/__pycache__/0007_remove_useraccountlogs_action_by.cpython-312.pyc
+Parents/migrations/__pycache__/0003_alter_parent_options.cpython-312.pyc
+Faculty/migrations/__pycache__/0003_subjects.cpython-312.pyc
+Students/migrations/__pycache__/0005_student_year_level.cpython-312.pyc
+Students/migrations/__pycache__/0006_alter_student_year_level.cpython-312.pyc
+Students/migrations/__pycache__/0007_remove_student_year_level.cpython-312.pyc
+Students/migrations/__pycache__/0008_yearlevel_student_year_level.cpython-312.pyc

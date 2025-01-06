@@ -57,7 +57,7 @@ class Parent(models.Model):
 
     class Meta:
         verbose_name = "Parent"
-        verbose_name_plural = "Parent"
+        verbose_name_plural = "Parents"
 
 
 @receiver(pre_save, sender=Parent)
