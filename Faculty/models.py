@@ -137,6 +137,7 @@ class Subjects(models.Model):
     subject_code = models.CharField(max_length=10, unique=True)
     subject_name = models.CharField(max_length=100)
     year_level = models.ForeignKey('Students.YearLevel', on_delete=models.SET_NULL, null=True)
+    schedule = models.TimeField(null=True)
     instructor = models.ForeignKey('Faculty.Faculty', on_delete=models.SET_NULL, null=True)
 
     def __str__(self):

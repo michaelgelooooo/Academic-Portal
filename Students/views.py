@@ -58,18 +58,45 @@ def subjects(request):
 
 
 @login_required(login_url="student-login")
-def schedule(request):
+def subject_view(request, subject_code):
     if not request.user.username.startswith("STU-"):
         messages.error(request, "Only student accounts can access this page")
         return redirect("student-login")
-
+    
     student = Student.objects.get(student_id=request.user.username)
+    subject = Subjects.objects.get(subject_code=subject_code)
+
+    subject.formatted_schedule = f"{subject.schedule.strftime('%I:%M %p')}"
 
     context = {
         "student_id": student.student_id,
         "first_name": student.first_name,
         "last_name": student.last_name,
         "profile_pic": student.profile_pic,
+        "subject": subject,
+    }
+
+    return render(request, "students/subject_view.html", context)
+
+
+@login_required(login_url="student-login")
+def schedule(request):
+    if not request.user.username.startswith("STU-"):
+        messages.error(request, "Only student accounts can access this page")
+        return redirect("student-login")
+
+    student = Student.objects.get(student_id=request.user.username)
+    subjects = Subjects.objects.filter(year_level=student.year_level)
+
+    for subject in subjects:
+        subject.formatted_schedule = f"{subject.schedule.strftime('%I:%M %p')}"
+
+    context = {
+        "student_id": student.student_id,
+        "first_name": student.first_name,
+        "last_name": student.last_name,
+        "profile_pic": student.profile_pic,
+        "subjects": subjects,
     }
 
     return render(request, "students/schedule.html", context)

@@ -6570,3 +6570,5 @@ Students/migrations/__pycache__/0005_student_year_level.cpython-312.pyc
 Students/migrations/__pycache__/0006_alter_student_year_level.cpython-312.pyc
 Students/migrations/__pycache__/0007_remove_student_year_level.cpython-312.pyc
 Students/migrations/__pycache__/0008_yearlevel_student_year_level.cpython-312.pyc
+Faculty/migrations/__pycache__/0004_subjects_schedule.cpython-312.pyc
+Faculty/migrations/__pycache__/0005_alter_subjects_schedule.cpython-312.pyc

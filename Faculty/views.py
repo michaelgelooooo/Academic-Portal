@@ -10,7 +10,7 @@ from django.contrib import messages
 from .forms import LoginForm, EditProfileForm
 from .models import Faculty, Subjects
 from Academy.models import UserAccessLogs
-from Students.models import YearLevel
+from datetime import datetime, timedelta
 from PIL import Image
 from io import BytesIO
 import sys
@@ -44,7 +44,6 @@ def subjects(request):
         return redirect("faculty-login")
 
     faculty = Faculty.objects.get(faculty_id=request.user.username)
-    year_levels = YearLevel.objects.all()
     subjects = Subjects.objects.filter(instructor=faculty)
 
     context = {
@@ -52,11 +51,32 @@ def subjects(request):
         "first_name": faculty.first_name,
         "last_name": faculty.last_name,
         "profile_pic": faculty.profile_pic,
-        "year_levels": year_levels,
         "subjects": subjects,
     }
 
     return render(request, "faculty/subjects.html", context)
+
+
+@login_required(login_url="faculty-login")
+def subject_view(request, subject_code):
+    if not request.user.username.startswith("FAC-"):
+        messages.error(request, "Only faculty accounts can access this page")
+        return redirect("faculty-login")
+    
+    faculty = Faculty.objects.get(faculty_id=request.user.username)
+    subject = Subjects.objects.get(subject_code=subject_code)
+
+    subject.formatted_schedule = f"{subject.schedule.strftime('%I:%M %p')}"
+
+    context = {
+        "faculty_id": faculty.faculty_id,
+        "first_name": faculty.first_name,
+        "last_name": faculty.last_name,
+        "profile_pic": faculty.profile_pic,
+        "subject": subject,
+    }
+
+    return render(request, "faculty/subject_view.html", context)
 
 
 @login_required(login_url="faculty-login")
@@ -66,12 +86,19 @@ def schedule(request):
         return redirect("faculty-login")
 
     faculty = Faculty.objects.get(faculty_id=request.user.username)
+    subjects = Subjects.objects.filter(instructor=faculty)
 
+    subjects = Subjects.objects.filter(instructor=faculty)
+
+    for subject in subjects:
+        subject.formatted_schedule = f"{subject.schedule.strftime('%I:%M %p')}"
+    
     context = {
         "faculty_id": faculty.faculty_id,
         "first_name": faculty.first_name,
         "last_name": faculty.last_name,
         "profile_pic": faculty.profile_pic,
+        "subjects": subjects,
     }
 
     return render(request, "faculty/schedule.html", context)
