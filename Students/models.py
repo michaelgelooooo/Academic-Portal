@@ -86,7 +86,12 @@ def create_user_account(sender, instance, created, **kwargs):
         )
 
         UserAccountLogs.objects.create(
-            user_name=instance.student_id, user_type="Student", log_type="Created"
+            user_name=instance.student_id, user_type="Student", action="Created"
+        )
+    else:
+        # Log the update action
+        UserAccountLogs.objects.create(
+            user_name=instance.student_id, user_type="Student", action="Updated"
         )
 
 
@@ -101,7 +106,7 @@ def delete_user_account(sender, instance, **kwargs):
             user._student_being_deleted = True
 
             UserAccountLogs.objects.create(
-                user_name=instance.student_id, user_type="Student", log_type="Deleted"
+                user_name=instance.student_id, user_type="Student", action="Deleted"
             )
 
             user.delete()
@@ -121,7 +126,7 @@ def delete_student_record(sender, instance, **kwargs):
             student._user_being_deleted = True
 
             UserAccountLogs.objects.create(
-                user_name=instance.username, user_type="Student", log_type="Deleted"
+                user_name=instance.username, user_type="Student", action="Deleted"
             )
 
             student.delete()

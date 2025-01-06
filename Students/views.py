@@ -295,7 +295,7 @@ def login(request):
 
                     # Create log entry after successful login
                     UserAccessLogs.objects.create(
-                        user_name=student_id, user_type="Student", log_type="Login"
+                        user_name=student_id, user_type="Student", action="Login"
                     )
 
                     return redirect("student-dashboard")
@@ -321,10 +321,7 @@ def logout(request):
         auth_logout(request)
 
         UserAccessLogs.objects.create(
-            user_name=student_id, user_type="Student", log_type="Logout"
+            user_name=student_id, user_type="Student", action="Logout"
         )
-    # else:
-    #     messages.error(request, "Invalid request method")
-    #     return redirect("student-dashboard")
 
     return redirect("student-login")

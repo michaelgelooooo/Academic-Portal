@@ -6561,3 +6561,6 @@ Academy/migrations/__pycache__/0001_initial.cpython-312.pyc
 Academy/migrations/__pycache__/0002_alter_useraccesslogs_user_id.cpython-312.pyc
 Academy/migrations/__pycache__/0003_alter_useraccesslogs_options_and_more.cpython-312.pyc
 Academy/migrations/__pycache__/0004_useraccountlogs_and_more.cpython-312.pyc
+Academy/migrations/__pycache__/0005_rename_log_type_useraccesslogs_action_and_more.cpython-312.pyc
+Academy/migrations/__pycache__/0006_useraccountlogs_action_by.cpython-312.pyc
+Academy/migrations/__pycache__/0007_remove_useraccountlogs_action_by.cpython-312.pyc
