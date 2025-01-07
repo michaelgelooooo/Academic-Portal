@@ -7,6 +7,7 @@ urlpatterns = [
     path('subjects/', views.subjects, name='faculty-subjects'),
     path('subjects/<str:subject_code>', views.subject_view, name='faculty-subject-view'),
     path('schedule/', views.schedule, name='faculty-schedule'),
+    path('advisory/', views.advisory_class, name='faculty-advisory'),
     path('chat/', views.chat, name='faculty-chat'),
     path('profile/', views.profile, name='faculty-profile'),
     path('profile/edit', views.edit_profile, name='faculty-edit-profile'),

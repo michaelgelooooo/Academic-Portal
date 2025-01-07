@@ -16,35 +16,82 @@
             {% endfor %}
         </div>
         {% endif %}
-        
-        <h1>Faculty Dashboard</h1>
 
-        <div class="row g-4 mt-2">
-            <div class="col-md-4">
-                <a href="{% url 'faculty-subjects' %}" class="text-decoration-none">
-                    <div class="card h-100 shadow-sm hover-card">
-                        <div class="card-body text-center">
-                            <h5 class="card-title">
-                                <i class="fa-solid fa-book me-2"></i>
-                                Subjects
-                            </h5>
+        <div class="mb-4">
+            <h1 class="display-4 fw-bold text-dark mb-3">Faculty Dashboard</h1>
+            <p class="lead text-muted">Welcome back! Manage your classes, review student performance, and access academic resources below.</p>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-md-3">
+                <a href="{% url 'faculty-advisory' %}" class="text-decoration-none">
+                    <div class="card h-100 border-0 rounded-3 bg-white shadow-sm">
+                        <div class="card-body d-flex flex-column align-items-center justify-content-center p-4">
+                            <div class="bg-dark bg-opacity-10 p-3 rounded-circle mb-3">
+                                <i class="fa-solid fa-school-flag fa-2x text-dark"></i>
+                            </div>
+                            <h5 class="card-title fw-bold mb-2">Advisory Class</h5>
+                            <p class="text-muted mb-0">Manage your adisory class</p>
+                        </div>
+                        <div class="card-footer bg-transparent border-0 text-center">
+                            <span class="text-dark">Manage Class →</span>
                         </div>
                     </div>
                 </a>
             </div>
-            <div class="col-md-4">
+
+            <div class="col-md-3">
+                <a href="{% url 'faculty-subjects' %}" class="text-decoration-none">
+                    <div class="card h-100 border-0 rounded-3 bg-white shadow-sm">
+                        <div class="card-body d-flex flex-column align-items-center justify-content-center p-4">
+                            <div class="bg-dark bg-opacity-10 p-3 rounded-circle mb-3">
+                                <i class="fa-solid fa-book fa-2x text-dark"></i>
+                            </div>
+                            <h5 class="card-title fw-bold mb-2">Subjects</h5>
+                            <p class="text-muted mb-0">View the subjects you manage</p>
+                        </div>
+                        <div class="card-footer bg-transparent border-0 text-center">
+                            <span class="text-dark">Browse Subjects →</span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <div class="col-md-3">
                 <a href="{% url 'faculty-schedule' %}" class="text-decoration-none">
-                    <div class="card h-100 shadow-sm hover-card">
-                        <div class="card-body text-center">
-                            <h5 class="card-title">
-                                <i class="fa-solid fa-calendar me-2"></i>
-                                Schedule
-                            </h5>
+                    <div class="card h-100 border-0 rounded-3 bg-white shadow-sm">
+                        <div class="card-body d-flex flex-column align-items-center justify-content-center p-4">
+                            <div class="bg-dark bg-opacity-10 p-3 rounded-circle mb-3">
+                                <i class="fa-solid fa-calendar fa-2x text-dark"></i>
+                            </div>
+                            <h5 class="card-title fw-bold mb-2">Schedule</h5>
+                            <p class="text-muted mb-0">Check your class timings</p>
+                        </div>
+                        <div class="card-footer bg-transparent border-0 text-center">
+                            <span class="text-dark">View Schedule →</span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <div class="col-md-3">
+                <a href="#" class="text-decoration-none">
+                    <div class="card h-100 border-0 rounded-3 bg-white shadow-sm">
+                        <div class="card-body d-flex flex-column align-items-center justify-content-center p-4">
+                            <div class="bg-dark bg-opacity-10 p-3 rounded-circle mb-3">
+                                <i class="fa-solid fa-rectangle-list fa-2x text-dark"></i>
+                            </div>
+                            <h5 class="card-title fw-bold mb-2">Gradebook</h5>
+                            <p class="text-muted mb-0">Review the performance of your students </p>
+                        </div>
+                        <div class="card-footer bg-transparent border-0 text-center">
+                            <span class="text-dark">Check Grades →</span>
                         </div>
                     </div>
                 </a>
             </div>
         </div>
+        
     </div>
 </main>
 {% endblock %}

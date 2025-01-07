@@ -17,41 +17,58 @@
         </div>
         {% endif %}
         
-        <h1>Student Dashboard</h1>
+        <div class="mb-4">
+            <h1 class="display-4 fw-bold mb-3">Student Dashboard</h1>
+            <p class="lead text-muted">Welcome back! Access your academic information below.</p>
+        </div>
 
-        <div class="row g-4 mt-2">
+        <div class="row g-4">
             <div class="col-md-4">
                 <a href="{% url 'student-subjects' %}" class="text-decoration-none">
-                    <div class="card h-100 shadow-sm hover-card">
-                        <div class="card-body text-center">
-                            <h5 class="card-title">
-                                <i class="fa-solid fa-book me-2"></i>
-                                Subjects
-                            </h5>
+                    <div class="card h-100 border-0 rounded-3 bg-white shadow-sm">
+                        <div class="card-body d-flex flex-column align-items-center justify-content-center p-4">
+                            <div class="bg-success bg-opacity-10 p-3 rounded-circle mb-3">
+                                <i class="fa-solid fa-book fa-2x text-success"></i>
+                            </div>
+                            <h5 class="card-title fw-bold mb-2">Subjects</h5>
+                            <p class="text-muted mb-0">View your enrolled courses</p>
+                        </div>
+                        <div class="card-footer bg-transparent border-0 text-center">
+                            <span class="text-success">Browse Subjects →</span>
                         </div>
                     </div>
                 </a>
             </div>
+
             <div class="col-md-4">
                 <a href="{% url 'student-schedule' %}" class="text-decoration-none">
-                    <div class="card h-100 shadow-sm hover-card">
-                        <div class="card-body text-center">
-                            <h5 class="card-title">
-                                <i class="fa-solid fa-calendar me-2"></i>
-                                Schedule
-                            </h5>
+                    <div class="card h-100 border-0 rounded-3 bg-white shadow-sm">
+                        <div class="card-body d-flex flex-column align-items-center justify-content-center p-4">
+                            <div class="bg-success bg-opacity-10 p-3 rounded-circle mb-3">
+                                <i class="fa-solid fa-calendar fa-2x text-success"></i>
+                            </div>
+                            <h5 class="card-title fw-bold mb-2">Schedule</h5>
+                            <p class="text-muted mb-0">Check your class timings</p>
+                        </div>
+                        <div class="card-footer bg-transparent border-0 text-center">
+                            <span class="text-success">View Schedule →</span>
                         </div>
                     </div>
                 </a>
             </div>
+
             <div class="col-md-4">
                 <a href="{% url 'student-grades' %}" class="text-decoration-none">
-                    <div class="card h-100 shadow-sm hover-card">
-                        <div class="card-body text-center">
-                            <h5 class="card-title">
-                                <i class="fa-solid fa-rectangle-list me-2"></i>
-                                Grades
-                            </h5>
+                    <div class="card h-100 border-0 rounded-3 bg-white shadow-sm">
+                        <div class="card-body d-flex flex-column align-items-center justify-content-center p-4">
+                            <div class="bg-success bg-opacity-10 p-3 rounded-circle mb-3">
+                                <i class="fa-solid fa-rectangle-list fa-2x text-success"></i>
+                            </div>
+                            <h5 class="card-title fw-bold mb-2">Grades</h5>
+                            <p class="text-muted mb-0">Review your performance</p>
+                        </div>
+                        <div class="card-footer bg-transparent border-0 text-center">
+                            <span class="text-success">Check Grades →</span>
                         </div>
                     </div>
                 </a>

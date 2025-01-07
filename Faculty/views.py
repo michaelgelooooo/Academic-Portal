@@ -10,6 +10,7 @@ from django.contrib import messages
 from .forms import LoginForm, EditProfileForm
 from .models import Faculty, Subjects
 from Academy.models import UserAccessLogs
+from Students.models import Student, Classes
 from datetime import datetime, timedelta
 from PIL import Image
 from io import BytesIO
@@ -68,12 +69,15 @@ def subject_view(request, subject_code):
 
     subject.formatted_schedule = f"{subject.schedule.strftime('%I:%M %p')}"
 
+    students = Student.objects.filter(year_level=subject.year_level)
+
     context = {
         "faculty_id": faculty.faculty_id,
         "first_name": faculty.first_name,
         "last_name": faculty.last_name,
         "profile_pic": faculty.profile_pic,
         "subject": subject,
+        "students": students,
     }
 
     return render(request, "faculty/subject_view.html", context)
@@ -105,6 +109,32 @@ def schedule(request):
     }
 
     return render(request, "faculty/schedule.html", context)
+
+
+@login_required(login_url="faculty-login")
+def advisory_class(request):
+    if not request.user.username.startswith("FAC-"):
+        messages.error(request, "Only faculty accounts can access this page")
+        return redirect("faculty-login")
+
+    faculty = Faculty.objects.get(faculty_id=request.user.username)
+    class_to_manage = Classes.objects.filter(adviser=faculty).first()
+
+    if class_to_manage:
+        students = Student.objects.filter(year_level=class_to_manage)
+    else:
+        students = []
+
+    context = {
+        "faculty_id": faculty.faculty_id,
+        "first_name": faculty.first_name,
+        "last_name": faculty.last_name,
+        "profile_pic": faculty.profile_pic,
+        "class_to_manage": class_to_manage,
+        "students": students,
+    }
+
+    return render(request, "faculty/advisory_class.html", context)
 
 
 @login_required(login_url="faculty-login")

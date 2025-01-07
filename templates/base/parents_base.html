@@ -19,7 +19,7 @@
     <script src="{% static 'js/script.js' %}"></script>
 </head>
 
-<body>
+<body class="bg-light">
     {% if not '-login' in request.resolver_match.url_name|default:'' %}
     <nav class="navbar navbar-expand-lg bg-primary shadow-lg sticky-top">
         <div class="container-fluid px-5 py-2">
@@ -30,7 +30,8 @@
 
             <div class="navbar-nav ms-auto">
                 <a class="nav-link d-flex align-items-center" aria-current="page" href="{% url 'parent-profile' %}">
-                    <img src="{{ profile_pic.url }}" alt="Parent Profile" class="img-fluid rounded-circle" width="40">
+                    <img src="{{ profile_pic.url }}" alt="Parent Profile"
+                        class="img-fluid rounded-circle border border-2 border-light" width="40">
                     <div class="d-none d-md-inline ms-2">
                         <div class="text-white lh-1">{{ first_name }} {{ last_name }}</div>
                         <div class="text-secondary lh-1">{{ parent_id }}</div>
@@ -42,36 +43,44 @@
     {% endif %}
 
     <div class="offcanvas offcanvas-start" data-bs-scroll="true" tabindex="-1" id="offcanvasWithBothOptions">
-        <div class="offcanvas-header d-flex flex-column">
-            <button type="button" class="btn-close align-self-end" data-bs-dismiss="offcanvas"></button>
+        <div class="offcanvas-header border-bottom">
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
 
-            <div class="d-flex justify-content-center">
-                <a href="{% url 'index' %}">
-                    <img src="{% static 'images/navbar_logo.png' %}" alt="Academy" height="100">
+        <div class="text-center mb-4 container p-3">
+            <a href="{% url 'index' %}" class="text-decoration-none">
+                <img src="{% static 'images/navbar_logo.png' %}" alt="Academy" height="100" class="img-fluid">
+            </a>
+        </div>
+
+        <div class="px-3">
+            <div class="list-group list-group-flush">
+                <a href="{% url 'parent-dashboard' %}"
+                    class="list-group-item list-group-item-action py-3 rounded-3 mb-2 d-flex align-items-center">
+                    <i class="fa-solid fa-display fa-fw me-3"></i>
+                    <span class="fw-semibold">Dashboard</span>
+                </a>
+                <a href="{% url 'parent-family' %}"
+                    class="list-group-item list-group-item-action py-3 rounded-3 mb-2 d-flex align-items-center">
+                    <i class="fa-solid fa-people-roof fa-fw me-3"></i>
+                    <span class="fw-semibold">Family</span>
+                </a>
+                <a href="{% url 'parent-chat' %}"
+                    class="list-group-item list-group-item-action py-3 rounded-3 mb-2 d-flex align-items-center">
+                    <i class="fa-solid fa-message fa-fw me-3"></i>
+                    <span class="fw-semibold">Chat</span>
                 </a>
             </div>
         </div>
 
-        <div class="mt-5">
-            <div class="list-group">
-                <a href="{% url 'parent-dashboard' %}" class="list-group-item list-group-item-action p-4">
-                    <i class="fa-solid fa-display me-2"></i>Dashboard
-                </a>
-                <a href="{% url 'parent-family' %}" class="list-group-item list-group-item-action p-4">
-                    <i class="fa-solid fa-people-roof me-2"></i>Family
-                </a>
-                <a href="{% url 'parent-chat' %}" class="list-group-item list-group-item-action p-4">
-                    <i class="fa-solid fa-message me-2"></i>Chat
-                </a>
-            </div>
-        </div>
-
-        <div class="mt-auto">
+        <div class="mt-auto px-3 mb-3">
             <div class="list-group">
                 <form method="post" action="{% url 'parent-logout' %}">
                     {% csrf_token %}
-                    <button type="submit" class="list-group-item list-group-item-action text-danger w-100 text-start p-4">
-                        <i class="fa-solid fa-right-from-bracket me-2"></i>Logout
+                    <button type="submit"
+                        class="list-group-item list-group-item-action text-danger rounded-3 py-3 d-flex align-items-center">
+                        <i class="fa-solid fa-right-from-bracket fa-fw me-3"></i>
+                        <span class="fw-semibold">Logout</span>
                     </button>
                 </form>
             </div>

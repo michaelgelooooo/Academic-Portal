@@ -22,7 +22,7 @@
         <!-- Page Header -->
         <div class="row mb-4">
             <div class="col">
-                <h2 class="display-6 mb-3 fw-semibold">Class Schedule</h2>
+                <h1 class="display-6 fw-bold mb-3">Class Schedule</h1>
             </div>
         </div>
 
@@ -36,30 +36,30 @@
                                 <thead class="table-light">
                                     <tr>
                                         <th scope="col" class="border-0 text-nowrap">
-                                            <i class="fa-solid fa-clock me-2"></i>Time
+                                            <i class="fa-solid fa-clock me-2 text-success"></i>Time
                                         </th>
                                         <th scope="col" class="border-0 text-nowrap">
-                                            <i class="fa-solid fa-hashtag me-2"></i>Subject Code
+                                            <i class="fa-solid fa-hashtag me-2 text-success"></i>Subject Code
                                         </th>
                                         <th scope="col" class="border-0 text-nowrap">
-                                            <i class="fa-solid fa-book me-2"></i>Subject Name
+                                            <i class="fa-solid fa-book me-2 text-success"></i>Subject Name
                                         </th>
                                         <th scope="col" class="border-0 text-nowrap">
-                                            <i class="fa-solid fa-person me-2"></i>Instructor
+                                            <i class="fa-solid fa-person me-2 text-success"></i>Instructor
                                         </th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {% for subject in subjects %}
                                     <tr>
-                                        <td class="text-nowrap">
+                                        <td class="text-nowrap py-3">
                                             <span class="badge bg-success">
                                                 {{ subject.formatted_schedule }}
                                             </span>
                                         </td>
-                                        <td class="text-nowrap"><strong>{{ subject.subject_code }}</strong></td>
-                                        <td class="text-nowrap">{{ subject.subject_name }}</td>
-                                        <td class="text-nowrap">
+                                        <td class="text-nowrap py-3"><strong>{{ subject.subject_code }}</strong></td>
+                                        <td class="text-nowrap py-3">{{ subject.subject_name }}</td>
+                                        <td class="text-nowrap py-3">
                                             <div class="d-flex align-items-center">
                                                 {{ subject.instructor.first_name }} {{ subject.instructor.last_name }}
                                             </div>

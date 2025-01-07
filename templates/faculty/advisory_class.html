@@ -1,6 +1,6 @@
 {% extends 'base/faculty_base.html' %}
 
-{% block title %}Schedule{% endblock %}
+{% block title %}Advisory Class{% endblock %}
 
 {% block content %}
 <main>
@@ -17,14 +17,14 @@
         </div>
         {% endif %}
 
+        {% if students %}
         <!-- Page Header -->
         <div class="row mb-4">
             <div class="col">
-                <h2 class="display-6 mb-3 fw-semibold">Class Schedule</h2>
+                <h2 class="display-6 mb-3 fw-semibold">Advisory Class: {{ class_to_manage }}</h2>
             </div>
         </div>
 
-        <!-- Schedule Card -->
         <div class="row">
             <div class="col">
                 <div class="card shadow-sm">
@@ -34,30 +34,30 @@
                                 <thead class="table-light">
                                     <tr>
                                         <th scope="col" class="border-0 text-nowrap">
-                                            <i class="fa-solid fa-clock me-2"></i>Time
+                                            <i class="fa-solid fa-hashtag me-2"></i>Student ID
                                         </th>
                                         <th scope="col" class="border-0 text-nowrap">
-                                            <i class="fa-solid fa-hashtag me-2"></i>Subject Code
+                                            <i class="fa-solid fa-user me-2"></i>Student Name
                                         </th>
                                         <th scope="col" class="border-0 text-nowrap">
-                                            <i class="fa-solid fa-book me-2"></i>Subject Name
-                                        </th>
-                                        <th scope="col" class="border-0 text-nowrap">
-                                            <i class="fa-solid fa-book me-2"></i>Class
+                                            <i class="fa-solid fa-envelope me-2"></i>Student Email
                                         </th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {% for subject in subjects %}
+                                    {% for student in students %}
                                     <tr>
                                         <td class="text-nowrap py-3">
-                                            <span class="badge bg-dark">
-                                                {{ subject.formatted_schedule }}
-                                            </span>
+                                            <span class="fw-medium text-secondary">{{ student.student_id }}</span>
                                         </td>
-                                        <td class="text-nowrap py-3"><strong>{{ subject.subject_code }}</strong></td>
-                                        <td class="text-nowrap py-3">{{ subject.subject_name }}</td>
-                                        <td class="text-nowrap py-3">{{ subject.year_level }}</td>
+                                        <td class="text-nowrap py-3">
+                                            <div class="fw-semibold text-dark">
+                                                {{ student.first_name }} {{ student.last_name }}
+                                            </div>
+                                        </td>
+                                        <td class="text-nowrap py-3">
+                                            {{ student.email }}
+                                        </td>
                                     </tr>
                                     {% endfor %}
                                 </tbody>
@@ -67,6 +67,7 @@
                 </div>
             </div>
         </div>
+        {% endif %}
     </div>
 </main>
 {% endblock %}

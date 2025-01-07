@@ -30,7 +30,7 @@
 
             <div class="navbar-nav ms-auto">
                 <a class="nav-link d-flex align-items-center" aria-current="page" href="{% url 'faculty-profile' %}">
-                    <img src="{{ profile_pic.url }}" alt="Faculty Profile" class="img-fluid rounded-circle" width="40">
+                    <img src="{{ profile_pic.url }}" alt="Faculty Profile" class="img-fluid rounded-circle border border-2 border-light" width="40">
                     <div class="d-none d-md-inline ms-2">
                         <div class="text-white lh-1">{{ first_name }} {{ last_name }}</div>
                         <div class="text-secondary lh-1">{{ faculty_id }}</div>
@@ -42,39 +42,59 @@
     {% endif %}
 
     <div class="offcanvas offcanvas-start" data-bs-scroll="true" tabindex="-1" id="offcanvasWithBothOptions">
-        <div class="offcanvas-header d-flex flex-column">
-            <button type="button" class="btn-close align-self-end" data-bs-dismiss="offcanvas"></button>
+        <div class="offcanvas-header border-bottom">
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
 
-            <div class="d-flex justify-content-center">
-                <a href="{% url 'index' %}">
-                    <img src="{% static 'images/navbar_logo.png' %}" alt="Academy" height="100">
+        <div class="text-center mb-4 container p-3">
+            <a href="{% url 'index' %}" class="text-decoration-none">
+                <img src="{% static 'images/navbar_logo.png' %}" alt="Academy" height="100" class="img-fluid">
+            </a>
+        </div>
+
+        <div class="px-3">
+            <div class="list-group list-group-flush">
+                <a href="{% url 'faculty-dashboard' %}"
+                    class="list-group-item list-group-item-action py-3 rounded-3 mb-2 d-flex align-items-center">
+                    <i class="fa-solid fa-display fa-fw me-3"></i>
+                    <span class="fw-semibold">Dashboard</span>
+                </a>
+                <a href="{% url 'faculty-advisory' %}"
+                    class="list-group-item list-group-item-action py-3 rounded-3 mb-2 d-flex align-items-center">
+                    <i class="fa-solid fa-school-flag fa-fw me-3"></i>
+                    <span class="fw-semibold">Advisory Class</span>
+                </a>
+                <a href="{% url 'faculty-subjects' %}"
+                    class="list-group-item list-group-item-action py-3 rounded-3 mb-2 d-flex align-items-center">
+                    <i class="fa-solid fa-book fa-fw me-3"></i>
+                    <span class="fw-semibold">Subjects</span>
+                </a>
+                <a href="{% url 'faculty-schedule' %}"
+                    class="list-group-item list-group-item-action py-3 rounded-3 mb-2 d-flex align-items-center">
+                    <i class="fa-solid fa-calendar fa-fw me-3"></i>
+                    <span class="fw-semibold">Schedule</span>
+                </a>
+                <a href="#"
+                    class="list-group-item list-group-item-action py-3 rounded-3 mb-2 d-flex align-items-center">
+                    <i class="fa-solid fa-rectangle-list fa-fw me-3"></i>
+                    <span class="fw-semibold">Gradebook</span>
+                </a>
+                <a href="{% url 'faculty-chat' %}"
+                    class="list-group-item list-group-item-action py-3 rounded-3 mb-2 d-flex align-items-center">
+                    <i class="fa-solid fa-message fa-fw me-3"></i>
+                    <span class="fw-semibold">Chat</span>
                 </a>
             </div>
         </div>
 
-        <div class="mt-5">
-            <div class="list-group">
-                <a href="{% url 'faculty-dashboard' %}" class="list-group-item list-group-item-action p-4">
-                    <i class="fa-solid fa-display me-2"></i>Dashboard
-                </a>
-                <a href="{% url 'faculty-subjects' %}" class="list-group-item list-group-item-action p-4">
-                    <i class="fa-solid fa-book me-2"></i>Subjects
-                </a>
-                <a href="{% url 'faculty-schedule' %}" class="list-group-item list-group-item-action p-4">
-                    <i class="fa-solid fa-calendar me-2"></i>Schedule
-                </a>
-                <a href="{% url 'faculty-chat' %}" class="list-group-item list-group-item-action p-4">
-                    <i class="fa-solid fa-message me-2"></i>Chat
-                </a>
-            </div>
-        </div>
-
-        <div class="mt-auto">
+        <div class="mt-auto px-3 mb-3">
             <div class="list-group">
                 <form method="post" action="{% url 'faculty-logout' %}">
                     {% csrf_token %}
-                    <button type="submit" class="list-group-item list-group-item-action text-danger w-100 text-start p-4">
-                        <i class="fa-solid fa-right-from-bracket me-2"></i>Logout
+                    <button type="submit"
+                        class="list-group-item list-group-item-action text-danger rounded-3 py-3 d-flex align-items-center">
+                        <i class="fa-solid fa-right-from-bracket fa-fw me-3"></i>
+                        <span class="fw-semibold">Logout</span>
                     </button>
                 </form>
             </div>
