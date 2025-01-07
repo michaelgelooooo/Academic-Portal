@@ -17,24 +17,52 @@
         </div>
         {% endif %}
 
-        <table class="table">
-            <thead>
-                <tr>
-                    <th scope="col">Time</th>
-                    <th scope="col">Subject Code</th>
-                    <th scope="col">Subject Name</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for subject in subjects %}
-                <tr>
-                    <td>{{ subject.formatted_schedule }}</td>
-                    <td>{{ subject.subject_code }}</td>
-                    <td>{{ subject.subject_name }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+        <!-- Page Header -->
+        <div class="row mb-4">
+            <div class="col">
+                <h2 class="display-6 mb-3 fw-semibold">Class Schedule</h2>
+            </div>
+        </div>
+
+        <!-- Schedule Card -->
+        <div class="row">
+            <div class="col">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th scope="col" class="border-0 text-nowrap">
+                                            <i class="fa-solid fa-clock me-2"></i>Time
+                                        </th>
+                                        <th scope="col" class="border-0 text-nowrap">
+                                            <i class="fa-solid fa-hashtag me-2"></i>Subject Code
+                                        </th>
+                                        <th scope="col" class="border-0 text-nowrap">
+                                            <i class="fa-solid fa-book me-2"></i>Subject Name
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for subject in subjects %}
+                                    <tr>
+                                        <td class="text-nowrap">
+                                            <span class="badge bg-dark">
+                                                {{ subject.formatted_schedule }}
+                                            </span>
+                                        </td>
+                                        <td class="text-nowrap"><strong>{{ subject.subject_code }}</strong></td>
+                                        <td class="text-nowrap">{{ subject.subject_name }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </main>
 {% endblock %}

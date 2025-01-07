@@ -1,34 +1,51 @@
 {% extends 'base/students_base.html' %}
-
 {% block title %}Subjects{% endblock %}
-
 {% block content %}
 <main>
     <div class="container p-5">
+        <!-- Alert Messages -->
         {% if messages %}
-        <div class="container mt-3">
-            {% for message in messages %}
-            <div class="alert alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags }}{% endif %} alert-dismissible fade show"
-                role="alert">
-                {{ message }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        <div class="row mb-4">
+            <div class="col-12">
+                {% for message in messages %}
+                <div class="alert alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags }}{% endif %} alert-dismissible fade show shadow-sm"
+                    role="alert">
+                    <i class="fas fa-info-circle me-2"></i>
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+                {% endfor %}
             </div>
-            {% endfor %}
         </div>
         {% endif %}
 
+        <!-- Page Header -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <h2 class="display-6 mb-3 fw-semibold">My Subjects</h2>
+            </div>
+        </div>
 
-        <div class="row row-cols-1 row-cols-md-3 g-4">
+        <!-- Subject Cards -->
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
             {% for subject in subjects %}
             <div class="col">
-                <a href="{% url 'student-subject-view' subject.subject_code %}">
-                    <div class="card h-100 shadow-sm">
-                        <div class="card-body">
+                <a href="{% url 'student-subject-view' subject.subject_code %}" class="text-decoration-none text-dark">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <div class="card-body p-4">
                             <div class="d-flex justify-content-between align-items-center mb-3">
-                                <i class="fas fa-book fs-4 text-primary"></i>
-                                <span class="badge bg-secondary">{{ subject.subject_code }}</span>
+                                <div class="bg-success bg-opacity-10 p-3 rounded-circle">
+                                    <i class="fas fa-book fs-4 text-success"></i>
+                                </div>
+                                <span class="badge bg-success bg-opacity-10 text-success px-3 py-2 rounded-pill">
+                                    {{ subject.subject_code }}
+                                </span>
                             </div>
-                            <h5 class="card-title">{{ subject.subject_name }}</h5>
+                            <h5 class="card-title mb-2">{{ subject.subject_name }}</h5>
+                            <p class="card-text text-muted small mb-0">
+                                Click to view subject details
+                                <i class="fas fa-arrow-right ms-1"></i>
+                            </p>
                         </div>
                     </div>
                 </a>
