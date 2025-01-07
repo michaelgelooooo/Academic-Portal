@@ -137,7 +137,7 @@ def delete_student_record(sender, instance, **kwargs):
 
 class Classes(models.Model):
     year_level = models.CharField(max_length=10, unique=True)
-    adviser = models.ForeignKey("Faculty.Faculty", on_delete=models.SET_NULL, null=True)
+    adviser = models.OneToOneField("Faculty.Faculty", on_delete=models.SET_NULL, null=True)
 
     def __str__(self):
         return self.year_level

@@ -41,7 +41,7 @@
     </nav>
     {% endif %}
 
-    <div class="offcanvas offcanvas-start" data-bs-scroll="true" tabindex="-1" id="offcanvasWithBothOptions">
+    <div class="offcanvas offcanvas-start bg-light" data-bs-scroll="true" tabindex="-1" id="offcanvasWithBothOptions">
         <div class="offcanvas-header border-bottom">
             <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
         </div>
@@ -53,7 +53,7 @@
         </div>
 
         <div class="px-3">
-            <div class="list-group list-group-flush">
+            <div class="list-group">
                 <a href="{% url 'faculty-dashboard' %}"
                     class="list-group-item list-group-item-action py-3 rounded-3 mb-2 d-flex align-items-center">
                     <i class="fa-solid fa-display fa-fw me-3"></i>
@@ -74,10 +74,10 @@
                     <i class="fa-solid fa-calendar fa-fw me-3"></i>
                     <span class="fw-semibold">Schedule</span>
                 </a>
-                <a href="#"
+                <a href="{% url 'faculty-gradebooks' %}"
                     class="list-group-item list-group-item-action py-3 rounded-3 mb-2 d-flex align-items-center">
                     <i class="fa-solid fa-rectangle-list fa-fw me-3"></i>
-                    <span class="fw-semibold">Gradebook</span>
+                    <span class="fw-semibold">Gradebooks</span>
                 </a>
                 <a href="{% url 'faculty-chat' %}"
                     class="list-group-item list-group-item-action py-3 rounded-3 mb-2 d-flex align-items-center">

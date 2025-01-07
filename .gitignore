@@ -6579,3 +6579,4 @@ Academy/migrations/__pycache__/0008_subjectschangeslogs.cpython-312.pyc
 Academy/migrations/__pycache__/0009_classchangeslogs.cpython-312.pyc
 Students/migrations/__pycache__/0009_rename_yearlevel_classes.cpython-312.pyc
 Students/migrations/__pycache__/0010_alter_classes_options.cpython-312.pyc
+Students/migrations/__pycache__/0011_alter_classes_adviser.cpython-312.pyc

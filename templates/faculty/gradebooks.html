@@ -1,6 +1,6 @@
 {% extends 'base/faculty_base.html' %}
 
-{% block title %}Subjects{% endblock %}
+{% block title %}Gradebooks{% endblock %}
 
 {% block content %}
 <main>
@@ -16,11 +16,11 @@
             {% endfor %}
         </div>
         {% endif %}
-
+        
         <!-- Page Header -->
         <div class="row mb-4">
             <div class="col-12">
-                <h2 class="display-6 mb-3 fw-semibold">Managed Subjects</h2>
+                <h2 class="display-6 mb-3 fw-semibold">Gradebooks</h2>
             </div>
         </div>
 
@@ -28,7 +28,7 @@
         <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
             {% for subject in subjects %}
             <div class="col">
-                <a href="{% url 'faculty-subject-view' subject.subject_code %}" class="text-decoration-none text-dark">
+                <a href="{% url 'faculty-gradebook-view' subject.subject_code %}" class="text-decoration-none text-dark">
                     <div class="card h-100 border-0 shadow-sm">
                         <div class="card-body p-4">
                             <div class="d-flex justify-content-between align-items-center mb-3">
@@ -41,7 +41,7 @@
                             </div>
                             <h5 class="card-title mb-2">{{ subject.subject_name }}</h5>
                             <p class="card-text text-muted small mb-0">
-                                Click to view subject details
+                                Click to view subject gradebook
                                 <i class="fas fa-arrow-right ms-1"></i>
                             </p>
                         </div>

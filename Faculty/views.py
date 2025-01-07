@@ -138,6 +138,51 @@ def advisory_class(request):
 
 
 @login_required(login_url="faculty-login")
+def gradebooks(request):
+    if not request.user.username.startswith("FAC-"):
+        messages.error(request, "Only faculty accounts can access this page")
+        return redirect("faculty-login")
+
+    faculty = Faculty.objects.get(faculty_id=request.user.username)
+    subjects = Subjects.objects.filter(instructor=faculty)
+
+    context = {
+        "faculty_id": faculty.faculty_id,
+        "first_name": faculty.first_name,
+        "last_name": faculty.last_name,
+        "profile_pic": faculty.profile_pic,
+        "subjects": subjects,
+    }
+
+    return render(request, "faculty/gradebooks.html", context)
+
+
+@login_required(login_url="faculty-login")
+def gradebook_view(request, subject_code):
+    if not request.user.username.startswith("FAC-"):
+        messages.error(request, "Only faculty accounts can access this page")
+        return redirect("faculty-login")
+    
+    faculty = Faculty.objects.get(faculty_id=request.user.username)
+    subject = Subjects.objects.get(subject_code=subject_code)
+
+    subject.formatted_schedule = f"{subject.schedule.strftime('%I:%M %p')}"
+
+    students = Student.objects.filter(year_level=subject.year_level)
+
+    context = {
+        "faculty_id": faculty.faculty_id,
+        "first_name": faculty.first_name,
+        "last_name": faculty.last_name,
+        "profile_pic": faculty.profile_pic,
+        "subject": subject,
+        "students": students,
+    }
+
+    return render(request, "faculty/gradebook_view.html", context)
+
+
+@login_required(login_url="faculty-login")
 def chat(request):
     if not request.user.username.startswith("FAC-"):
         messages.error(request, "Only faculty accounts can access this page")

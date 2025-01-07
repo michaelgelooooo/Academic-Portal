@@ -40,7 +40,7 @@ class Faculty(models.Model):
                         user.save()
                     except User.DoesNotExist:
                         pass
-                        
+
                 # Existing profile pic handling
                 if old_instance.profile_pic != self.profile_pic:
                     if os.path.exists(
@@ -49,7 +49,7 @@ class Faculty(models.Model):
                         os.remove(old_instance.profile_pic.path)
             except Faculty.DoesNotExist:
                 pass
-                
+
         super().save(*args, **kwargs)
 
     def __str__(self):
@@ -136,9 +136,13 @@ def delete_faculty_record(sender, instance, **kwargs):
 class Subjects(models.Model):
     subject_code = models.CharField(max_length=10, unique=True)
     subject_name = models.CharField(max_length=100)
-    year_level = models.ForeignKey('Students.Classes', on_delete=models.SET_NULL, null=True)
+    year_level = models.ForeignKey(
+        "Students.Classes", on_delete=models.SET_NULL, null=True
+    )
     schedule = models.TimeField(null=True)
-    instructor = models.ForeignKey('Faculty.Faculty', on_delete=models.SET_NULL, null=True)
+    instructor = models.ForeignKey(
+        "Faculty.Faculty", on_delete=models.SET_NULL, null=True
+    )
 
     def __str__(self):
         return f"{self.subject_code} - {self.subject_name}"
@@ -148,15 +152,18 @@ class Subjects(models.Model):
         verbose_name_plural = "Subjects"
 
 
-
 @receiver(post_save, sender=Subjects)
 def create_subject(sender, instance, created, **kwargs):
     if created:
         SubjectsChangesLogs.objects.create(
-            subject_code=instance.subject_code, subject_name=instance.subject_name, action="Created"
+            subject_code=instance.subject_code,
+            subject_name=instance.subject_name,
+            action="Created",
         )
     else:
         # Log the update action
         SubjectsChangesLogs.objects.create(
-            subject_code=instance.subject_code, subject_name=instance.subject_name, action="Updated"
+            subject_code=instance.subject_code,
+            subject_name=instance.subject_name,
+            action="Updated",
         )

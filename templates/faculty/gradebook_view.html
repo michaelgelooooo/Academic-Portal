@@ -1,0 +1,115 @@
+{% extends 'base/faculty_base.html' %}
+
+{% block title %}{{ subject.subject_name }} Gradebook{% endblock %}
+
+{% block content %}
+<main>
+    <div class="container p-5">
+        <!-- Breadcrumb Navigation -->
+        <nav aria-label="breadcrumb" class="mb-4">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'faculty-gradebooks' %}"
+                        class="text-decoration-none text-dark">Gradebooks</a></li>
+                <li class="breadcrumb-item active" aria-current="page">{{ subject.subject_code }}</li>
+            </ol>
+        </nav>
+
+        {% if messages %}
+        <div class="container mb-4">
+            {% for message in messages %}
+            <div class="alert alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags }}{% endif %} alert-dismissible fade show"
+                role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <div class="card shadow-sm">
+            <!-- Subject Details Section -->
+            <div class="card-header bg-light py-3">
+                <div class="d-flex align-items-center">
+                    <i class="fas fa-book text-dark me-2"></i>
+                    <h2 class="h4 mb-0">Subject Details</h2>
+                </div>
+            </div>
+
+            <div class="card-body bg-white">
+                <div class="row g-4">
+                    <div class="col-md-3">
+                        <div class="mb-3">
+                            <label class="text-muted small text-uppercase fw-bold">Subject Code</label>
+                            <div class="border-start border-4 border-dark ps-3 mt-2">
+                                <h3 class="h5 mb-0">{{ subject.subject_code }}</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="mb-3">
+                            <label class="text-muted small text-uppercase fw-bold">Subject Name</label>
+                            <div class="border-start border-4 border-dark ps-3 mt-2">
+                                <h3 class="h5 mb-0">{{ subject.subject_name }}</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="mb-3">
+                            <label class="text-muted small text-uppercase fw-bold">Year Level</label>
+                            <div class="border-start border-4 border-dark ps-3 mt-2">
+                                <h3 class="h5 mb-0">{{ subject.year_level }}</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="mb-3">
+                            <label class="text-muted small text-uppercase fw-bold">Schedule</label>
+                            <div class="border-start border-4 border-dark ps-3 mt-2">
+                                <h3 class="h5 mb-0">{{ subject.formatted_schedule }}</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Instructor Information Section -->
+            <div class="card-header bg-light py-3 border-top">
+                <div class="d-flex align-items-center">
+                    <i class="fas fa-chalkboard-teacher text-dark me-2"></i>
+                    <h2 class="h4 mb-0">Student List</h2>
+                </div>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead>
+                        <tr class="bg-light border-top">
+                            <th scope="col" class="text-center py-3" style="width: 120px;">Student ID</th>
+                            <th scope="col" class="py-3">Full Name</th>
+                            <th scope="col" class=" text-center py-3">Grade</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for student in students %}
+                        <tr>
+                            <td class="text-center py-3">
+                                <span class="fw-medium text-secondary">{{ student.student_id }}</span>
+                            </td>
+                            <td class="py-3">
+                                <div class="fw-semibold text-dark">
+                                    {{ student.first_name }} {{ student.last_name }}
+                                </div>
+                            </td>
+                            <td class="text-center py-3">
+                                <!-- <span class="fw-medium text-secondary">{{ student.student_id }}</span> -->
+                                 95
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock %}
