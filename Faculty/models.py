@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from django.db.models.signals import pre_save, post_save, pre_delete
 from django.dispatch import receiver
 from datetime import datetime
-from Academy.models import UserAccountLogs
+from Academy.models import UserAccountLogs, SubjectsChangesLogs
 import os
 
 
@@ -136,7 +136,7 @@ def delete_faculty_record(sender, instance, **kwargs):
 class Subjects(models.Model):
     subject_code = models.CharField(max_length=10, unique=True)
     subject_name = models.CharField(max_length=100)
-    year_level = models.ForeignKey('Students.YearLevel', on_delete=models.SET_NULL, null=True)
+    year_level = models.ForeignKey('Students.Classes', on_delete=models.SET_NULL, null=True)
     schedule = models.TimeField(null=True)
     instructor = models.ForeignKey('Faculty.Faculty', on_delete=models.SET_NULL, null=True)
 
@@ -146,3 +146,17 @@ class Subjects(models.Model):
     class Meta:
         verbose_name = "Subject"
         verbose_name_plural = "Subjects"
+
+
+
+@receiver(post_save, sender=Subjects)
+def create_subject(sender, instance, created, **kwargs):
+    if created:
+        SubjectsChangesLogs.objects.create(
+            subject_code=instance.subject_code, subject_name=instance.subject_name, action="Created"
+        )
+    else:
+        # Log the update action
+        SubjectsChangesLogs.objects.create(
+            subject_code=instance.subject_code, subject_name=instance.subject_name, action="Updated"
+        )

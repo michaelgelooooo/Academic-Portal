@@ -86,12 +86,15 @@ def schedule(request):
         return redirect("faculty-login")
 
     faculty = Faculty.objects.get(faculty_id=request.user.username)
-    subjects = Subjects.objects.filter(instructor=faculty)
-
-    subjects = Subjects.objects.filter(instructor=faculty)
+    subjects = Subjects.objects.filter(instructor=faculty).order_by("schedule")
 
     for subject in subjects:
-        subject.formatted_schedule = f"{subject.schedule.strftime('%I:%M %p')}"
+        # Convert time to datetime for calculation
+        start_datetime = datetime.combine(datetime.today(), subject.schedule)
+        end_datetime = start_datetime + timedelta(hours=1)
+        
+        # Format using the time component
+        subject.formatted_schedule = f"{start_datetime.strftime('%I:%M %p')} - {end_datetime.strftime('%I:%M %p')}"
     
     context = {
         "faculty_id": faculty.faculty_id,

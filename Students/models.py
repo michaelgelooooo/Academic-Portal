@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from django.db.models.signals import pre_save, post_save, pre_delete
 from django.dispatch import receiver
 from datetime import datetime
-from Academy.models import UserAccountLogs
+from Academy.models import UserAccountLogs, ClassChangesLogs
 import os
 
 
@@ -17,7 +17,7 @@ class Student(models.Model):
     student_id = models.CharField(max_length=8, unique=True, blank=True)
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
-    year_level = models.ForeignKey('Students.YearLevel', on_delete=models.SET_NULL, null=True)
+    year_level = models.ForeignKey('Students.Classes', on_delete=models.SET_NULL, null=True)
     email = models.EmailField(unique=True)
     phone_number = models.CharField(max_length=15)
     password = models.CharField(max_length=100)
@@ -135,7 +135,7 @@ def delete_student_record(sender, instance, **kwargs):
         pass
 
 
-class YearLevel(models.Model):
+class Classes(models.Model):
     year_level = models.CharField(max_length=10, unique=True)
     adviser = models.ForeignKey("Faculty.Faculty", on_delete=models.SET_NULL, null=True)
 
@@ -143,5 +143,18 @@ class YearLevel(models.Model):
         return self.year_level
 
     class Meta:
-        verbose_name = "Year Level"
-        verbose_name_plural = "Year Levels"
+        verbose_name = "Class"
+        verbose_name_plural = "Classes"
+
+
+@receiver(post_save, sender=Classes)
+def create_subject(sender, instance, created, **kwargs):
+    if created:
+        ClassChangesLogs.objects.create(
+            class_name=instance.year_level, action="Created"
+        )
+    else:
+        # Log the update action
+        ClassChangesLogs.objects.create(
+            class_name=instance.year_level, action="Updated"
+        )

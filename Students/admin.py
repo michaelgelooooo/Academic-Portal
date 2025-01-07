@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Student, YearLevel
+from .models import Student, Classes
 
 
 @admin.register(Student)
@@ -9,7 +9,7 @@ class StudentAdmin(admin.ModelAdmin):
     readonly_fields = ("student_id",)
 
 
-@admin.register(YearLevel)
-class YearLevelAdmin(admin.ModelAdmin):
+@admin.register(Classes)
+class ClassesAdmin(admin.ModelAdmin):
     list_display = ("year_level", "adviser")
     search_fields = ("year_level", "adviser")

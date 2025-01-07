@@ -11,6 +11,7 @@ from .forms import LoginForm, EditProfileForm
 from .models import Student
 from Academy.models import UserAccessLogs
 from Faculty.models import Subjects
+from datetime import datetime, timedelta
 from PIL import Image
 from io import BytesIO
 import sys
@@ -86,10 +87,15 @@ def schedule(request):
         return redirect("student-login")
 
     student = Student.objects.get(student_id=request.user.username)
-    subjects = Subjects.objects.filter(year_level=student.year_level)
+    subjects = Subjects.objects.filter(year_level=student.year_level).order_by("schedule")
 
     for subject in subjects:
-        subject.formatted_schedule = f"{subject.schedule.strftime('%I:%M %p')}"
+        # Convert time to datetime for calculation
+        start_datetime = datetime.combine(datetime.today(), subject.schedule)
+        end_datetime = start_datetime + timedelta(hours=1)
+        
+        # Format using the time component
+        subject.formatted_schedule = f"{start_datetime.strftime('%I:%M %p')} - {end_datetime.strftime('%I:%M %p')}"
 
     context = {
         "student_id": student.student_id,
