@@ -115,13 +115,24 @@ def grades(request):
         return redirect("student-login")
 
     student = Student.objects.get(student_id=request.user.username)
+    subjects = Subjects.objects.filter(year_level=student.year_level).order_by("schedule")
+
+    for subject in subjects:
+        # Convert time to datetime for calculation
+        start_datetime = datetime.combine(datetime.today(), subject.schedule)
+        end_datetime = start_datetime + timedelta(hours=1)
+        
+        # Format using the time component
+        subject.formatted_schedule = f"{start_datetime.strftime('%I:%M %p')} - {end_datetime.strftime('%I:%M %p')}"
 
     context = {
         "student_id": student.student_id,
         "first_name": student.first_name,
         "last_name": student.last_name,
         "profile_pic": student.profile_pic,
+        "subjects": subjects,
     }
+
     return render(request, "students/grades.html", context)
 
 

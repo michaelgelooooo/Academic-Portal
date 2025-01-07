@@ -84,23 +84,29 @@
                 <table class="table table-hover align-middle mb-0">
                     <thead>
                         <tr class="bg-light border-top">
-                            <th scope="col" class="text-center py-3" style="width: 120px;">Student ID</th>
-                            <th scope="col" class="py-3">Full Name</th>
-                            <th scope="col" class="py-3">Email</th>
+                            <th scope="col" class="text-nowrap p-3 w-25">
+                                <i class="fa-solid fa-hashtag me-2"></i>Student ID
+                            </th>
+                            <th scope="col" class="text-nowrap py-3">
+                                <i class="fa-solid fa-user me-2"></i>Full Name
+                            </th>
+                            <th scope="col" class="text-nowrap py-3 w-25">
+                                <i class="fa-solid fa-envelope me-2"></i>Email
+                            </th>
                         </tr>
                     </thead>
                     <tbody>
                         {% for student in students %}
                         <tr>
-                            <td class="text-center py-3">
-                                <span class="fw-medium text-secondary">{{ student.student_id }}</span>
+                            <td class="p-3">
+                                <span class="fw-medium text-nowrap text-secondary">{{ student.student_id }}</span>
                             </td>
                             <td class="py-3">
-                                <div class="fw-semibold text-dark">
+                                <div class="fw-semibold text-nowrap text-dark">
                                     {{ student.first_name }} {{ student.last_name }}
                                 </div>
                             </td>
-                            <td class="py-3">
+                            <td class="text-nowrap py-3">
                                 {{ student.email }}
                             </td>
                         </tr>

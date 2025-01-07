@@ -17,7 +17,50 @@
         </div>
         {% endif %}
         
-        <h1>Student Grades</h1>
+        <!-- Page Header -->
+        <div class="row mb-4">
+            <div class="col">
+                <h1 class="display-6 fw-bold mb-3">Class Schedule</h1>
+            </div>
+        </div>
+
+        <!-- Schedule Card -->
+        <div class="row">
+            <div class="col">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th scope="col" class="border-0 text-nowrap">
+                                            <i class="fa-solid fa-hashtag me-2 text-success"></i>Subject Code
+                                        </th>
+                                        <th scope="col" class="border-0 text-nowrap">
+                                            <i class="fa-solid fa-book me-2 text-success"></i>Subject Name
+                                        </th>
+                                        <th scope="col" class="border-0 text-center text-nowrap">
+                                            <i class="fa-solid fa-person me-2 text-success"></i>Grades
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for subject in subjects %}
+                                    <tr>
+                                        <td class="text-nowrap py-3"><strong>{{ subject.subject_code }}</strong></td>
+                                        <td class="text-nowrap py-3">{{ subject.subject_name }}</td>
+                                        <td class="text-nowrap text-center py-3">
+                                            95
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </main>
 {% endblock %}
