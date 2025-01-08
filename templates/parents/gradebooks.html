@@ -16,7 +16,7 @@
             {% endfor %}
         </div>
         {% endif %}
-        
+
         <div class="row mb-4">
             <div class="col-12">
                 <h2 class="display-6 mb-3 fw-semibold">Gradebooks</h2>
@@ -24,27 +24,45 @@
         </div>
 
         <div class="row row-cols-1 row-cols-lg-2 g-4">
+            {% for child in children %}
             <div class="col">
-                <a href="#" class="text-decoration-none text-primary">
+                <a href="{% url 'parent-gradebooks-view' child.student_id %}" class="text-decoration-none text-primary">
                     <div class="card h-100 border-0 shadow-sm">
                         <div class="card-body p-4">
-                            <div class="d-flex justify-content-between align-items-center mb-3">
-                                <div class="bg-primary bg-opacity-10 p-3 rounded-circle">
-                                    <i class="fas fa-book fs-4 text-primary"></i>
+                            <div class="row g-4 align-items-center">
+                                <div class="col-md-5 text-center py-2">
+                                    <div class="position-relative">
+                                        <img src="{{ child.profile_pic.url }}" alt="Student Profile"
+                                            class="img-fluid rounded-circle border border-3 border-primary shadow-sm"
+                                            width="150">
+                                    </div>
                                 </div>
-                                <span class="badge bg-primary bg-opacity-10 text-primary px-3 py-2 rounded-pill">
-                                    {{ subject.subject_code }}
+                                <div class="col-md-7">
+                                    <div class="mb-3">
+                                        <span
+                                            class="badge bg-primary bg-opacity-10 text-primary px-3 py-2 rounded-pill mb-2 fw-medium">
+                                            {{ child.student_id }}
+                                        </span>
+                                        <h3 class="h4 mb-2 fw-bold text-dark">
+                                            {{ child.first_name }} {{ child.last_name }}
+                                        </h3>
+                                        <p class="h6 text-muted mb-0">
+                                            Year Level: {{ child.year_level }}
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row border-top text-center mt-3 pt-3">
+                                <span class="card-text text-muted small mb-0">
+                                    Click to view student gradebook
+                                    <i class="fas fa-arrow-right ms-1"></i>
                                 </span>
                             </div>
-                            <h5 class="card-title mb-2">{{ subject.subject_name }}</h5>
-                            <p class="card-text text-muted small mb-0">
-                                Click to view student details
-                                <i class="fas fa-arrow-right ms-1"></i>
-                            </p>
                         </div>
                     </div>
                 </a>
             </div>
+            {% endfor %}
         </div>
     </div>
 </main>

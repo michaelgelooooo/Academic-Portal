@@ -6588,3 +6588,4 @@ Faculty/migrations/__pycache__/0007_alter_lecturematerial_subject.cpython-312.py
 Academy/migrations/__pycache__/0010_lecturematerialslogs.cpython-312.pyc
 Academy/migrations/__pycache__/0011_gradechangeslogs.cpython-312.pyc
 Faculty/migrations/__pycache__/0008_alter_lecturematerial_options.cpython-312.pyc
+Students/migrations/__pycache__/0015_student_parent.cpython-312.pyc

@@ -13,9 +13,11 @@ class FacultyAdmin(admin.ModelAdmin):
 class SubjectsAdmin(admin.ModelAdmin):
     list_display = ("subject_code", "subject_name", "instructor")
     search_fields = ("subject_code", "subject_name", "instructor")
+    list_filter = ("year_level",)
 
 
 @admin.register(LectureMaterial)
 class LectureMaterialAdmin(admin.ModelAdmin):
     list_display = ("lecture_id", "lecture_title", "subject")
     search_fields = ("lecture_id", "lecture_title", "subject")
+    list_filter = ("subject",)

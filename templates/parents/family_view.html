@@ -1,0 +1,128 @@
+{% extends 'base/parents_base.html' %}
+{% block title %}Family | {{ child.student_id }}{% endblock %}
+{% block content %}
+<main>
+    <div class="container p-5">
+        <!-- Breadcrumb Navigation -->
+        <nav aria-label="breadcrumb" class="mb-4">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'parent-family' %}"
+                        class="text-primary text-decoration-none">Family</a></li>
+                <li class="breadcrumb-item active" aria-current="page">{{ child.student_id }}</li>
+            </ol>
+        </nav>
+
+        {% if messages %}
+        <div class="container mb-4">
+            {% for message in messages %}
+            <div class="alert alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags }}{% endif %} alert-dismissible fade show"
+                role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <div class="card shadow-sm">
+            <!-- Instructor Information Section -->
+            <div class="card-header bg-light py-3 border-top">
+                <div class="d-flex align-items-center">
+                    <i class="fas fa-user-circle text-primary me-2"></i>
+                    <h2 class="h4 mb-0">Student Information</h2>
+                </div>
+            </div>
+
+            <div class="card-body bg-white">
+                <div class="row g-4">
+                    <div class="col-md-4 text-center py-2">
+                        <img src="{{ child.profile_pic.url }}" alt="Student Profile"
+                            class="img-fluid rounded-circle border border-2 border-primary" width="125">
+                    </div>
+                    <div class="col-md-4">
+                        <div class="mb-3">
+                            <label class="text-muted small text-uppercase fw-bold">Student Name</label>
+                            <div class="d-flex align-items-center border-start border-4 border-primary ps-3 mt-2">
+                                <i class="fas fa-user text-primary me-2"></i>
+                                <h3 class="h5 mb-0">{{ child.first_name }} {{ child.last_name }}
+                                </h3>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="text-muted small text-uppercase fw-bold">Student Year</label>
+                            <div class="d-flex align-items-center border-start border-4 border-primary ps-3 mt-2">
+                                <i class="fas fa-graduation-cap text-primary me-2"></i>
+                                <h3 class="h5 mb-0">{{ child.year_level }}
+                                </h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="mb-3">
+                            <label class="text-muted small text-uppercase fw-bold">Student Email</label>
+                            <div class="d-flex align-items-center border-start border-4 border-primary ps-3 mt-2">
+                                <i class="fas fa-envelope text-primary me-2"></i>
+                                <h3 class="h5 mb-0">{{ child.email }}</h3>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="text-muted small text-uppercase fw-bold">Student Phone</label>
+                            <div class="d-flex align-items-center border-start border-4 border-primary ps-3 mt-2">
+                                <i class="fas fa-envelope text-primary me-2"></i>
+                                <h3 class="h5 mb-0">{{ child.phone_number }}</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Materials Section -->
+            <div class="card-header bg-light py-3 border-top">
+                <div class="d-flex align-items-center">
+                    <i class="fas fa-calendar text-primary me-2"></i>
+                    <h2 class="h4 mb-0">Schedule</h2>
+                </div>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead>
+                        <tr class="bg-light border-top">
+                            <th scope="col" class="text-nowrap p-3">
+                                <i class="fa-solid fa-clock me-2"></i>Time
+                            </th>
+                            <th scope="col" class="text-nowrap py-3">
+                                <i class="fa-solid fa-hashtag me-2"></i>Subject Code
+                            </th>
+                            <th scope="col" class="text-nowrap py-3">
+                                <i class="fa-solid fa-book me-2"></i>Subject Name
+                            </th>
+                            <th scope="col" class="text-nowrap py-3">
+                                <i class="fa-solid fa-chalkboard-teacher me-2"></i>Instructor
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for subject in subjects %}
+                        <tr>
+                            <td class="text-nowrap py-3">
+                                <span class="badge bg-primary">
+                                    {{ subject.formatted_schedule }}
+                                </span>
+                            </td>
+                            <td class="text-nowrap py-3"><strong>{{ subject.subject_code }}</strong></td>
+                            <td class="text-nowrap py-3">{{ subject.subject_name }}</td>
+                            <td class="text-nowrap py-3">
+                                <div class="d-flex align-items-center">
+                                    {{ subject.instructor.first_name }} {{ subject.instructor.last_name }}
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock %}

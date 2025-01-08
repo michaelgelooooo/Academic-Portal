@@ -59,6 +59,7 @@ class Faculty(models.Model):
     class Meta:
         verbose_name = "Faculty"
         verbose_name_plural = "Faculty"
+        ordering = ["faculty_id"]
 
 
 @receiver(pre_save, sender=Faculty)
@@ -151,6 +152,7 @@ class Subjects(models.Model):
     class Meta:
         verbose_name = "Subject"
         verbose_name_plural = "Subjects"
+        ordering = ["subject_code"]
 
 
 @receiver(post_save, sender=Subjects)
@@ -212,3 +214,4 @@ class LectureMaterial(models.Model):
     class Meta:
         verbose_name = "Lecture Material"
         verbose_name_plural = "Lecture Materials"
+        ordering = ["lecture_id"]

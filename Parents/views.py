@@ -10,6 +10,9 @@ from django.contrib import messages
 from .forms import LoginForm, EditProfileForm
 from .models import Parent
 from Academy.models import UserAccessLogs
+from Students.models import Student, Grades
+from Faculty.models import Subjects
+from datetime import datetime, timedelta
 from PIL import Image
 from io import BytesIO
 import sys
@@ -43,15 +46,48 @@ def family(request):
         return redirect("parent-login")
 
     parent = Parent.objects.get(parent_id=request.user.username)
+    children = Student.objects.filter(parent=parent)
 
     context = {
         "parent_id": parent.parent_id,
         "first_name": parent.first_name,
         "last_name": parent.last_name,
         "profile_pic": parent.profile_pic,
+        "children": children,
     }
 
     return render(request, "parents/family.html", context)
+
+
+@login_required(login_url="parent-login")
+def family_view(request, student_id):
+    if not request.user.username.startswith("PAR-"):
+        messages.error(request, "Only parent accounts can access this page")
+        return redirect("parent-login")
+
+    parent = Parent.objects.get(parent_id=request.user.username)
+    child = Student.objects.get(student_id=student_id)
+
+    subjects = Subjects.objects.filter(year_level=child.year_level).order_by("schedule")
+
+    for subject in subjects:
+        # Convert time to datetime for calculation
+        start_datetime = datetime.combine(datetime.today(), subject.schedule)
+        end_datetime = start_datetime + timedelta(hours=1)
+
+        # Format using the time component
+        subject.formatted_schedule = f"{start_datetime.strftime('%I:%M %p')} - {end_datetime.strftime('%I:%M %p')}"
+
+    context = {
+        "parent_id": parent.parent_id,
+        "first_name": parent.first_name,
+        "last_name": parent.last_name,
+        "profile_pic": parent.profile_pic,
+        "child": child,
+        "subjects": subjects,
+    }
+
+    return render(request, "parents/family_view.html", context)
 
 
 @login_required(login_url="parent-login")
@@ -61,15 +97,56 @@ def gradebooks(request):
         return redirect("parent-login")
 
     parent = Parent.objects.get(parent_id=request.user.username)
+    children = Student.objects.filter(parent=parent)
 
     context = {
         "parent_id": parent.parent_id,
         "first_name": parent.first_name,
         "last_name": parent.last_name,
         "profile_pic": parent.profile_pic,
+        "children": children,
     }
 
     return render(request, "parents/gradebooks.html", context)
+
+
+@login_required(login_url="parent-login")
+def gradebook_view(request, student_id):
+    if not request.user.username.startswith("PAR-"):
+        messages.error(request, "Only parent accounts can access this page")
+        return redirect("parent-login")
+
+    parent = Parent.objects.get(parent_id=request.user.username)
+    child = Student.objects.get(student_id=student_id)
+
+    subjects = Subjects.objects.filter(year_level=child.year_level).order_by("schedule")
+    grades = Grades.objects.filter(student=child)
+
+    for subject in subjects:
+        # Convert time to datetime for calculation
+        start_datetime = datetime.combine(datetime.today(), subject.schedule)
+        end_datetime = start_datetime + timedelta(hours=1)
+
+        # Format using the time component
+        subject.formatted_schedule = f"{start_datetime.strftime('%I:%M %p')} - {end_datetime.strftime('%I:%M %p')}"
+
+    # Create a dictionary of student_id: grade
+    grade_dict = {grade.subject.subject_code: grade.grade for grade in grades}
+
+    # Assign grades to students
+    for subject in subjects:
+        subject.grade = grade_dict.get(subject.subject_code, "")
+
+    context = {
+        "parent_id": parent.parent_id,
+        "first_name": parent.first_name,
+        "last_name": parent.last_name,
+        "profile_pic": parent.profile_pic,
+        "child": child,
+        "subjects": subjects,
+    }
+
+    return render(request, "parents/gradebook_view.html", context)
 
 
 @login_required(login_url="parent-login")

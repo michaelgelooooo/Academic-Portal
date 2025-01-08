@@ -5,7 +5,13 @@ from . import views
 urlpatterns = [
     path("dashboard/", views.dashboard, name="parent-dashboard"),
     path("family/", views.family, name="parent-family"),
+    path("family/<str:student_id>", views.family_view, name="parent-family-view"),
     path("gradebooks/", views.gradebooks, name="parent-gradebooks"),
+    path(
+        "gradebooks/<str:student_id>",
+        views.gradebook_view,
+        name="parent-gradebooks-view",
+    ),
     path("chat/", views.chat, name="parent-chat"),
     path("profile/", views.profile, name="parent-profile"),
     path("profile/edit", views.edit_profile, name="parent-edit-profile"),

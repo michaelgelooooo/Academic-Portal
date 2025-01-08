@@ -74,11 +74,18 @@
                 <div class="row g-4">
                     <div class="col-md-4 text-center py-2">
                         <img src="{{ subject.instructor.profile_pic.url }}" alt="Student Profile"
-                            class="img-fluid rounded-circle border border-2 border-light" width="125">
+                            class="img-fluid rounded-circle border border-2 border-success" width="125">
                     </div>
                     <div class="col-md-4">
                         <div class="mb-3">
-                            <label class="text-muted small text-uppercase fw-bold">Instructor</label>
+                            <label class="text-muted small text-uppercase fw-bold">Instructor ID</label>
+                            <div class="d-flex align-items-center border-start border-4 border-success ps-3 mt-2">
+                                <i class="fas fa-hashtag text-success me-2"></i>
+                                <h3 class="h5 mb-0">{{ subject.instructor.faculty_id }}</h3>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="text-muted small text-uppercase fw-bold">Instructor Name</label>
                             <div class="d-flex align-items-center border-start border-4 border-success ps-3 mt-2">
                                 <i class="fas fa-user text-success me-2"></i>
                                 <h3 class="h5 mb-0">{{ subject.instructor.first_name }} {{ subject.instructor.last_name
