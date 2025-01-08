@@ -9,7 +9,7 @@ from django.contrib.auth import (
 from django.contrib import messages
 from .forms import LoginForm, EditProfileForm, LectureMaterialForm
 from .models import Faculty, Subjects, LectureMaterial
-from Academy.models import UserAccessLogs
+from Academy.models import UserAccessLogs, LectureMaterialsLogs, GradeChangesLogs
 from Students.models import Student, Classes, Grades
 from datetime import datetime, timedelta
 from PIL import Image
@@ -94,6 +94,7 @@ def upload_material(request, subject_code):
     if request.method == "POST":
         # Get the subject from the hidden input
         subject_from_form = request.POST.get("subject")
+        lecture_id_from_form = request.POST.get("lecture_id")
 
         # Verify the subject from form matches the URL parameter
         if subject_from_form != str(subject_code):
@@ -105,6 +106,12 @@ def upload_material(request, subject_code):
             material = form.save(commit=False)
             material.subject = subject  # Set the subject from URL
             material.save()
+
+            LectureMaterialsLogs.objects.create(
+                material_id=f"{subject_from_form} - {lecture_id_from_form}",
+                action="Created",
+            )
+
             messages.success(request, "Material uploaded successfully!")
             return redirect("faculty-subject-view", subject_code=subject_code)
         else:
@@ -139,6 +146,12 @@ def edit_material(request, subject_code):
             material.lecture_file = request.FILES["lecture_file"]
 
         material.save()
+
+        LectureMaterialsLogs.objects.create(
+            material_id=f"{subject_code} - {material.lecture_id}",
+            action="Updated",
+        )
+
         messages.success(request, "Material updated successfully!")
 
     return redirect("faculty-subject-view", subject_code=subject_code)
@@ -161,6 +174,12 @@ def delete_material(request, subject_code):
     try:
         material = LectureMaterial.objects.get(lecture_id=material_id)
         material.delete()
+
+        LectureMaterialsLogs.objects.create(
+            material_id=f"{subject_code} - {material_id}",
+            action="Deleted",
+        )
+
         messages.success(
             request,
             f"Lecture material deleted Successfully",
@@ -285,6 +304,10 @@ def gradebook_view(request, subject_code):
                 grade_obj.grade = grade
                 grade_obj.save()
 
+            GradeChangesLogs.objects.create(
+                student_id=student_id, subject_code=subject_code
+            )
+
             messages.success(request, "Grade updated successfully")
 
         except ValueError as e:
@@ -333,6 +356,11 @@ def clear_grade(request, subject_code):
         try:
             grade = Grades.objects.get(student=student, subject=subject)
             grade.delete()
+
+            GradeChangesLogs.objects.create(
+                student_id=student_id, subject_code=subject_code
+            )
+
             messages.success(
                 request,
                 f"Grade cleared successfully for {student.first_name} {student.last_name}",

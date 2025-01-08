@@ -59,3 +59,31 @@ class ClassChangesLogs(models.Model):
     class Meta:
         verbose_name = "Class Changes Log"
         verbose_name_plural = "Class Changes Logs"
+
+
+class LectureMaterialsLogs(models.Model):
+    material_id = models.CharField(max_length=50)
+    action = models.CharField(max_length=50)
+    log_time = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        formatted_time = self.log_time.strftime("%Y-%m-%d %H:%M:%S")
+        return f"{self.material_id} {self.action}@{formatted_time}"
+
+    class Meta:
+        verbose_name = "Lecture Materials Log"
+        verbose_name_plural = "Lecture Materials Logs"
+
+
+class GradeChangesLogs(models.Model):
+    student_id = models.CharField(max_length=50)
+    subject_code = models.CharField(max_length=50)
+    log_time = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        formatted_time = self.log_time.strftime("%Y-%m-%d %H:%M:%S")
+        return f"{self.student_id} - {self.subject_code} Updated@{formatted_time}"
+
+    class Meta:
+        verbose_name = "Grade Changes Log"
+        verbose_name_plural = "Grade Changes Logs"

@@ -208,3 +208,7 @@ class LectureMaterial(models.Model):
         # Then delete the file if it exists
         if os.path.isfile(file_path):
             os.remove(file_path)
+
+    class Meta:
+        verbose_name = "Lecture Material"
+        verbose_name_plural = "Lecture Materials"
