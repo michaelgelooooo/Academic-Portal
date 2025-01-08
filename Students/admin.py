@@ -4,8 +4,8 @@ from .models import Student, Classes, Grades
 
 @admin.register(Student)
 class StudentAdmin(admin.ModelAdmin):
-    list_display = ("student_id", "first_name", "last_name", "email")
-    search_fields = ("student_id", "first_name", "last_name", "email")
+    list_display = ("student_id", "first_name", "last_name", "year_level", "email")
+    search_fields = ("student_id", "first_name", "last_name", "year_level", "email")
     readonly_fields = ("student_id",)
 
 

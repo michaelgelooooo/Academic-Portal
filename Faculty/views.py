@@ -7,8 +7,8 @@ from django.contrib.auth import (
     update_session_auth_hash,
 )
 from django.contrib import messages
-from .forms import LoginForm, EditProfileForm
-from .models import Faculty, Subjects
+from .forms import LoginForm, EditProfileForm, LectureMaterialForm
+from .models import Faculty, Subjects, LectureMaterial
 from Academy.models import UserAccessLogs
 from Students.models import Student, Classes, Grades
 from datetime import datetime, timedelta
@@ -69,7 +69,7 @@ def subject_view(request, subject_code):
 
     subject.formatted_schedule = f"{subject.schedule.strftime('%I:%M %p')}"
 
-    students = Student.objects.filter(year_level=subject.year_level)
+    materials = LectureMaterial.objects.filter(subject=subject)
 
     context = {
         "faculty_id": faculty.faculty_id,
@@ -77,10 +77,98 @@ def subject_view(request, subject_code):
         "last_name": faculty.last_name,
         "profile_pic": faculty.profile_pic,
         "subject": subject,
-        "students": students,
+        "materials": materials,
     }
 
     return render(request, "faculty/subject_view.html", context)
+
+
+@login_required(login_url="faculty-login")
+def upload_material(request, subject_code):
+    if not request.user.username.startswith("FAC-"):
+        messages.error(request, "Only faculty accounts can access this page")
+        return redirect("faculty-login")
+
+    subject = Subjects.objects.get(subject_code=subject_code)
+
+    if request.method == "POST":
+        # Get the subject from the hidden input
+        subject_from_form = request.POST.get("subject")
+
+        # Verify the subject from form matches the URL parameter
+        if subject_from_form != str(subject_code):
+            messages.error(request, "Invalid subject code in form submission")
+            return redirect("faculty-subject-view", subject_code=subject_code)
+
+        form = LectureMaterialForm(request.POST, request.FILES)
+        if form.is_valid():
+            material = form.save(commit=False)
+            material.subject = subject  # Set the subject from URL
+            material.save()
+            messages.success(request, "Material uploaded successfully!")
+            return redirect("faculty-subject-view", subject_code=subject_code)
+        else:
+            messages.error(
+                request, "Error in form submission. Please check your inputs."
+            )
+
+    return redirect("faculty-subject-view", subject_code=subject_code)
+
+
+@login_required(login_url="faculty-login")
+def edit_material(request, subject_code):
+    if not request.user.username.startswith("FAC-"):
+        messages.error(request, "Only faculty accounts can access this page")
+        return redirect("faculty-login")
+
+    if request.method == "POST":
+        material_id = request.POST.get("material_id")
+        material = LectureMaterial.objects.get(id=material_id)
+
+        # Verify the subject from form matches the URL parameter
+        if str(material.subject.subject_code) != str(subject_code):
+            messages.error(request, "Invalid subject code in form submission")
+            return redirect("faculty-subject-view", subject_code=subject_code)
+
+        # Update the fields
+        material.lecture_id = request.POST.get("lecture_id")
+        material.lecture_title = request.POST.get("lecture_title")
+
+        # Handle file upload if a new file was provided
+        if request.FILES.get("lecture_file"):
+            material.lecture_file = request.FILES["lecture_file"]
+
+        material.save()
+        messages.success(request, "Material updated successfully!")
+
+    return redirect("faculty-subject-view", subject_code=subject_code)
+
+
+@login_required(login_url="faculty-login")
+def delete_material(request, subject_code):
+    if not request.user.username.startswith("FAC-"):
+        messages.error(request, "Only faculty accounts can access this page")
+        return redirect("faculty-login")
+
+    if request.method != "POST":
+        messages.error(request, "Invalid request method")
+        return redirect("faculty-subject-view", subject_code=subject_code)
+
+    # Get necessary objects
+    material_id = request.POST.get("material_id")
+
+    # Try to find and delete the grade
+    try:
+        material = LectureMaterial.objects.get(lecture_id=material_id)
+        material.delete()
+        messages.success(
+            request,
+            f"Lecture material deleted Successfully",
+        )
+    except LectureMaterial.DoesNotExist:
+        messages.info(request, "No material found to delete")
+
+    return redirect("faculty-subject-view", subject_code=subject_code)
 
 
 @login_required(login_url="faculty-login")

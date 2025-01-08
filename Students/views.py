@@ -10,7 +10,7 @@ from django.contrib import messages
 from .forms import LoginForm, EditProfileForm
 from .models import Student, Grades
 from Academy.models import UserAccessLogs
-from Faculty.models import Subjects
+from Faculty.models import Subjects, LectureMaterial
 from datetime import datetime, timedelta
 from PIL import Image
 from io import BytesIO
@@ -68,6 +68,7 @@ def subject_view(request, subject_code):
     subject = Subjects.objects.get(subject_code=subject_code)
 
     subject.formatted_schedule = f"{subject.schedule.strftime('%I:%M %p')}"
+    materials = LectureMaterial.objects.filter(subject=subject)
 
     context = {
         "student_id": student.student_id,
@@ -75,6 +76,7 @@ def subject_view(request, subject_code):
         "last_name": student.last_name,
         "profile_pic": student.profile_pic,
         "subject": subject,
+        "materials": materials,
     }
 
     return render(request, "students/subject_view.html", context)

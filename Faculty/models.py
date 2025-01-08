@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import pre_save, post_save, pre_delete
 from django.dispatch import receiver
+from django.core.validators import FileExtensionValidator
 from datetime import datetime
 from Academy.models import UserAccountLogs, SubjectsChangesLogs
 import os
@@ -167,3 +168,43 @@ def create_subject(sender, instance, created, **kwargs):
             subject_name=instance.subject_name,
             action="Updated",
         )
+
+
+def lecture_material_path(instance, filename):
+    # Get the file extension from the original filename
+    file_extension = filename.split(".")[-1]
+
+    # Create new filename using subject_code and lecture_id
+    new_filename = (
+        f"{instance.subject.subject_code}_{instance.lecture_id}.{file_extension}"
+    )
+
+    # This function will create path like: lecture_materials/MATH101/filename.pdf
+    return f"lecture_materials/{instance.subject.subject_code}/{new_filename}"
+
+
+class LectureMaterial(models.Model):
+    lecture_id = models.CharField(max_length=20)
+    lecture_title = models.CharField(max_length=50)
+    subject = models.ForeignKey("Faculty.Subjects", on_delete=models.CASCADE)
+
+    lecture_file = models.FileField(
+        upload_to=lecture_material_path,
+        validators=[
+            FileExtensionValidator(
+                allowed_extensions=["pdf", "doc", "docx", "ppt", "pptx"]
+            )
+        ],
+    )
+
+    def __str__(self):
+        return f"{self.subject.subject_code} - {self.lecture_id} - {self.lecture_title}"
+
+    def delete(self, *args, **kwargs):
+        # Store the file path
+        file_path = self.lecture_file.path
+        # Delete the model instance first
+        super().delete(*args, **kwargs)
+        # Then delete the file if it exists
+        if os.path.isfile(file_path):
+            os.remove(file_path)

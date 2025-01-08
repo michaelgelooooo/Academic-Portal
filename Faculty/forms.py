@@ -1,5 +1,5 @@
 from django import forms
-from .models import Faculty
+from .models import Faculty, LectureMaterial
 
 
 class LoginForm(forms.Form):
@@ -42,3 +42,17 @@ class EditProfileForm(forms.ModelForm):
         if len(phone) < 10 or len(phone) > 15:
             raise forms.ValidationError("Phone number must be between 10 and 15 digits")
         return phone
+
+
+class LectureMaterialForm(forms.ModelForm):
+    class Meta:
+        model = LectureMaterial
+        fields = ["lecture_id", "lecture_title", "lecture_file"]
+
+    def clean_file(self):
+        file = self.cleaned_data.get("lecture_file")
+        if file:
+            # Convert size to MB
+            if file.size > 50 * 1024 * 1024:  # 10MB limit
+                raise forms.ValidationError("File size cannot exceed 10MB.")
+        return file

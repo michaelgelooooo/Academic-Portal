@@ -6,7 +6,8 @@
         <!-- Breadcrumb Navigation -->
         <nav aria-label="breadcrumb" class="mb-4">
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="{% url 'student-subjects' %}" class="text-decoration-none">Subjects</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'student-subjects' %}"
+                        class="text-decoration-none">Subjects</a></li>
                 <li class="breadcrumb-item active" aria-current="page">{{ subject.subject_code }}</li>
             </ol>
         </nav>
@@ -31,7 +32,7 @@
                     <h2 class="h4 mb-0">Subject Details</h2>
                 </div>
             </div>
-            
+
             <div class="card-body bg-white">
                 <div class="row g-4">
                     <div class="col-md-4">
@@ -60,7 +61,7 @@
                     </div>
                 </div>
             </div>
-    
+
             <!-- Instructor Information Section -->
             <div class="card-header bg-light py-3 border-top">
                 <div class="d-flex align-items-center">
@@ -68,30 +69,43 @@
                     <h2 class="h4 mb-0">Instructor Information</h2>
                 </div>
             </div>
-            
+
             <div class="card-body bg-white">
                 <div class="row g-4">
-                    <div class="col-md-6">
+                    <div class="col-md-4 text-center py-2">
+                        <img src="{{ subject.instructor.profile_pic.url }}" alt="Student Profile"
+                            class="img-fluid rounded-circle border border-2 border-light" width="125">
+                    </div>
+                    <div class="col-md-4">
                         <div class="mb-3">
                             <label class="text-muted small text-uppercase fw-bold">Instructor</label>
-                            <div class="d-flex align-items-center mt-2">
+                            <div class="d-flex align-items-center border-start border-4 border-success ps-3 mt-2">
                                 <i class="fas fa-user text-success me-2"></i>
-                                <h3 class="h5 mb-0">{{ subject.instructor.first_name }} {{ subject.instructor.last_name }}</h3>
+                                <h3 class="h5 mb-0">{{ subject.instructor.first_name }} {{ subject.instructor.last_name
+                                    }}
+                                </h3>
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-4">
                         <div class="mb-3">
                             <label class="text-muted small text-uppercase fw-bold">Instructor Email</label>
-                            <div class="d-flex align-items-center mt-2">
+                            <div class="d-flex align-items-center border-start border-4 border-success ps-3 mt-2">
                                 <i class="fas fa-envelope text-success me-2"></i>
                                 <h3 class="h5 mb-0">{{ subject.instructor.email }}</h3>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="text-muted small text-uppercase fw-bold">Instructor Phone</label>
+                            <div class="d-flex align-items-center border-start border-4 border-success ps-3 mt-2">
+                                <i class="fas fa-envelope text-success me-2"></i>
+                                <h3 class="h5 mb-0">{{ subject.instructor.phone_number }}</h3>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-    
+
             <!-- Materials Section -->
             <div class="card-header bg-light py-3 border-top">
                 <div class="d-flex align-items-center">
@@ -99,9 +113,42 @@
                     <h2 class="h4 mb-0">Materials</h2>
                 </div>
             </div>
-            
-            <div class="card-body bg-white">
-                <!-- Materials content will go here -->
+
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead>
+                        <tr class="bg-light border-top">
+                            <th scope="col" class="text-nowrap p-3">
+                                <i class="fa-solid fa-hashtag me-2"></i>Lecture ID
+                            </th>
+                            <th scope="col" class="text-nowrap py-3">
+                                <i class="fa-solid fa-user me-2"></i>Lecture Title
+                            </th>
+                            <th scope="col" class="text-nowrap py-3">
+                                <i class="fa-solid fa-sliders me-2"></i>Action
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for material in materials %}
+                        <tr>
+                            <td class="p-3">
+                                <span class="fw-medium text-nowrap text-secondary">{{ material.lecture_id }}</span>
+                            </td>
+                            <td class="py-3">
+                                <div class="fw-semibold text-nowrap text-dark">
+                                    {{ material.lecture_title }}
+                                </div>
+                            </td>
+                            <td class="text-nowrap py-3">
+                                <a href="{{ material.lecture_file.url }}" class="btn btn-outline-success">
+                                    <i class="fa-solid fa-download"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>

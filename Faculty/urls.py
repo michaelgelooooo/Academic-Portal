@@ -8,6 +8,21 @@ urlpatterns = [
     path(
         "subjects/<str:subject_code>", views.subject_view, name="faculty-subject-view"
     ),
+    path(
+        "subjects/<str:subject_code>/material/upload",
+        views.upload_material,
+        name="faculty-subjects-material-upload",
+    ),
+    path(
+        "subjects/<str:subject_code>/material/edit/",
+        views.edit_material,
+        name="faculty-subjects-material-edit",
+    ),
+    path(
+        "subjects/<str:subject_code>/material/delete",
+        views.delete_material,
+        name="faculty-subjects-material-delete",
+    ),
     path("schedule/", views.schedule, name="faculty-schedule"),
     path("advisory/", views.advisory_class, name="faculty-advisory"),
     path("gradebooks/", views.gradebooks, name="faculty-gradebooks"),

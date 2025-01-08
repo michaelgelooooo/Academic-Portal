@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Faculty, Subjects
+from .models import Faculty, Subjects, LectureMaterial
 
 
 @admin.register(Faculty)
@@ -13,3 +13,9 @@ class FacultyAdmin(admin.ModelAdmin):
 class SubjectsAdmin(admin.ModelAdmin):
     list_display = ("subject_code", "subject_name", "instructor")
     search_fields = ("subject_code", "subject_name", "instructor")
+
+
+@admin.register(LectureMaterial)
+class LectureMaterialAdmin(admin.ModelAdmin):
+    list_display = ("lecture_id", "lecture_title", "subject")
+    search_fields = ("lecture_id", "lecture_title", "subject")
