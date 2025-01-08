@@ -85,6 +85,9 @@
                             <th scope="col" class="text-nowrap text-center py-3 w-25">
                                 <i class="fa-solid fa-graduation-cap me-2"></i>Grade
                             </th>
+                            <th scope="col" class="text-nowrap text-center py-3 w-25">
+                                <i class="fa-solid fa-graduation-cap me-2"></i>Action
+                            </th>
                         </tr>
                     </thead>
                     <tbody>
@@ -99,10 +102,59 @@
                                 </div>
                             </td>
                             <td class="text-center text-nowrap py-3">
-                                <!-- <span class="fw-medium text-secondary">{{ student.student_id }}</span> -->
-                                95
+                                <span class="fw-medium text-secondary">{{ student.grade }}</span>
+                            </td>
+                            <td class="text-center text-nowrap py-3">
+                                <button class="btn btn-outline-dark" data-bs-toggle="modal"
+                                    data-bs-target="#changeGrade-{{student.student_id}}-{{subject.subject_code}}">
+                                    <i class="fa-solid fa-pen-to-square"></i>
+                                </button>
+                                <form method="POST" action="{% url 'faculty-clear-grade' subject.subject_code %}"
+                                    class="d-inline">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="student_id" value="{{ student.student_id }}">
+                                    <button type="submit" class="btn btn-outline-danger"
+                                        onclick="return confirm('Are you sure you want to clear this grade?');">
+                                        <i class="fa-solid fa-eraser"></i>
+                                    </button>
+                                </form>
                             </td>
                         </tr>
+
+                        <div class="modal fade" id="changeGrade-{{student.student_id}}-{{subject.subject_code}}"
+                            tabindex="-1">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="changePasswordModalFacultyLabel">Edit Student Grade
+                                        </h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
+                                    </div>
+                                    <form method="POST"
+                                        action="{% url 'faculty-gradebook-view' subject.subject_code %}">
+                                        {% csrf_token %}
+                                        <div class="modal-body">
+                                            <div class="mb-3">
+                                                <label class="form-label" for="grade_input">Student Grade</label>
+                                                <input type="number" class="form-control" name="grade_input"
+                                                    placeholder="Enter grade" required min="0" max="100">
+                                                <input type="hidden" name="student_id" value="{{ student.student_id }}">
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <div class="col-6">
+                                                <div class="d-flex justify-content-end gap-2">
+                                                    <button type="button" class="btn btn-secondary w-100"
+                                                        data-bs-dismiss="modal">Cancel</button>
+                                                    <button type="submit" class="btn btn-dark w-100">Save</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
                         {% endfor %}
                     </tbody>
                 </table>

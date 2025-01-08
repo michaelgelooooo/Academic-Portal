@@ -279,9 +279,9 @@ def logout(request):
     if not request.user.username.startswith("PAR-"):
         messages.error(request, "Only parent accounts can access this page")
         return redirect("parent-login")
-    
+
     parent_id = request.user.username
-    
+
     if request.method == "POST":
         auth_logout(request)
 

@@ -9,7 +9,7 @@ class UserAccessLogs(models.Model):
     log_time = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        formatted_time = self.log_time.strftime('%Y-%m-%d %H:%M:%S')
+        formatted_time = self.log_time.strftime("%Y-%m-%d %H:%M:%S")
         return f"{self.user_name} {self.action}@{formatted_time}"
 
     class Meta:
@@ -24,7 +24,7 @@ class UserAccountLogs(models.Model):
     log_time = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        formatted_time = self.log_time.strftime('%Y-%m-%d %H:%M:%S')
+        formatted_time = self.log_time.strftime("%Y-%m-%d %H:%M:%S")
         return f"{self.user_name} {self.action}@{formatted_time}"
 
     class Meta:
@@ -39,7 +39,7 @@ class SubjectsChangesLogs(models.Model):
     log_time = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        formatted_time = self.log_time.strftime('%Y-%m-%d %H:%M:%S')
+        formatted_time = self.log_time.strftime("%Y-%m-%d %H:%M:%S")
         return f"{self.subject_code} {self.action}@{formatted_time}"
 
     class Meta:
@@ -53,7 +53,7 @@ class ClassChangesLogs(models.Model):
     log_time = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        formatted_time = self.log_time.strftime('%Y-%m-%d %H:%M:%S')
+        formatted_time = self.log_time.strftime("%Y-%m-%d %H:%M:%S")
         return f"{self.class_name} {self.action}@{formatted_time}"
 
     class Meta:

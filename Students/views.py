@@ -8,7 +8,7 @@ from django.contrib.auth import (
 )
 from django.contrib import messages
 from .forms import LoginForm, EditProfileForm
-from .models import Student
+from .models import Student, Grades
 from Academy.models import UserAccessLogs
 from Faculty.models import Subjects
 from datetime import datetime, timedelta
@@ -63,7 +63,7 @@ def subject_view(request, subject_code):
     if not request.user.username.startswith("STU-"):
         messages.error(request, "Only student accounts can access this page")
         return redirect("student-login")
-    
+
     student = Student.objects.get(student_id=request.user.username)
     subject = Subjects.objects.get(subject_code=subject_code)
 
@@ -87,13 +87,15 @@ def schedule(request):
         return redirect("student-login")
 
     student = Student.objects.get(student_id=request.user.username)
-    subjects = Subjects.objects.filter(year_level=student.year_level).order_by("schedule")
+    subjects = Subjects.objects.filter(year_level=student.year_level).order_by(
+        "schedule"
+    )
 
     for subject in subjects:
         # Convert time to datetime for calculation
         start_datetime = datetime.combine(datetime.today(), subject.schedule)
         end_datetime = start_datetime + timedelta(hours=1)
-        
+
         # Format using the time component
         subject.formatted_schedule = f"{start_datetime.strftime('%I:%M %p')} - {end_datetime.strftime('%I:%M %p')}"
 
@@ -115,15 +117,25 @@ def grades(request):
         return redirect("student-login")
 
     student = Student.objects.get(student_id=request.user.username)
-    subjects = Subjects.objects.filter(year_level=student.year_level).order_by("schedule")
+    subjects = Subjects.objects.filter(year_level=student.year_level).order_by(
+        "schedule"
+    )
+    grades = Grades.objects.filter(student=student)
 
     for subject in subjects:
         # Convert time to datetime for calculation
         start_datetime = datetime.combine(datetime.today(), subject.schedule)
         end_datetime = start_datetime + timedelta(hours=1)
-        
+
         # Format using the time component
         subject.formatted_schedule = f"{start_datetime.strftime('%I:%M %p')} - {end_datetime.strftime('%I:%M %p')}"
+
+    # Create a dictionary of student_id: grade
+    grade_dict = {grade.subject.subject_code: grade.grade for grade in grades}
+
+    # Assign grades to students
+    for subject in subjects:
+        subject.grade = grade_dict.get(subject.subject_code, "")
 
     context = {
         "student_id": student.student_id,
@@ -363,9 +375,9 @@ def logout(request):
     if not request.user.username.startswith("STU-"):
         messages.error(request, "Only student accounts can access this page")
         return redirect("student-login")
-    
+
     student_id = request.user.username
-    
+
     if request.method == "POST":
         auth_logout(request)
 

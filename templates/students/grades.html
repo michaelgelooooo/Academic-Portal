@@ -16,11 +16,11 @@
             {% endfor %}
         </div>
         {% endif %}
-        
+
         <!-- Page Header -->
         <div class="row mb-4">
             <div class="col">
-                <h1 class="display-6 fw-bold mb-3">Class Schedule</h1>
+                <h1 class="display-6 fw-bold mb-3">Student Grades</h1>
             </div>
         </div>
 
@@ -50,7 +50,7 @@
                                         <td class="text-nowrap py-3"><strong>{{ subject.subject_code }}</strong></td>
                                         <td class="text-nowrap py-3">{{ subject.subject_name }}</td>
                                         <td class="text-nowrap text-center py-3">
-                                            95
+                                            {{ subject.grade }}
                                         </td>
                                     </tr>
                                     {% endfor %}

@@ -6580,3 +6580,6 @@ Academy/migrations/__pycache__/0009_classchangeslogs.cpython-312.pyc
 Students/migrations/__pycache__/0009_rename_yearlevel_classes.cpython-312.pyc
 Students/migrations/__pycache__/0010_alter_classes_options.cpython-312.pyc
 Students/migrations/__pycache__/0011_alter_classes_adviser.cpython-312.pyc
+Students/migrations/__pycache__/0012_grades.cpython-312.pyc
+Students/migrations/__pycache__/0013_rename_subject_id_grades_subject_code.cpython-312.pyc
+Students/migrations/__pycache__/0014_rename_student_id_grades_student_and_more.cpython-312.pyc

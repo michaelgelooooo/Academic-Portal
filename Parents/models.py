@@ -40,7 +40,7 @@ class Parent(models.Model):
                         user.save()
                     except User.DoesNotExist:
                         pass
-                        
+
                 # Existing profile pic handling
                 if old_instance.profile_pic != self.profile_pic:
                     if os.path.exists(
@@ -49,7 +49,7 @@ class Parent(models.Model):
                         os.remove(old_instance.profile_pic.path)
             except Parent.DoesNotExist:
                 pass
-                
+
         super().save(*args, **kwargs)
 
     def __str__(self):

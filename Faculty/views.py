@@ -10,7 +10,7 @@ from django.contrib import messages
 from .forms import LoginForm, EditProfileForm
 from .models import Faculty, Subjects
 from Academy.models import UserAccessLogs
-from Students.models import Student, Classes
+from Students.models import Student, Classes, Grades
 from datetime import datetime, timedelta
 from PIL import Image
 from io import BytesIO
@@ -63,7 +63,7 @@ def subject_view(request, subject_code):
     if not request.user.username.startswith("FAC-"):
         messages.error(request, "Only faculty accounts can access this page")
         return redirect("faculty-login")
-    
+
     faculty = Faculty.objects.get(faculty_id=request.user.username)
     subject = Subjects.objects.get(subject_code=subject_code)
 
@@ -96,10 +96,10 @@ def schedule(request):
         # Convert time to datetime for calculation
         start_datetime = datetime.combine(datetime.today(), subject.schedule)
         end_datetime = start_datetime + timedelta(hours=1)
-        
+
         # Format using the time component
         subject.formatted_schedule = f"{start_datetime.strftime('%I:%M %p')} - {end_datetime.strftime('%I:%M %p')}"
-    
+
     context = {
         "faculty_id": faculty.faculty_id,
         "first_name": faculty.first_name,
@@ -162,13 +162,56 @@ def gradebook_view(request, subject_code):
     if not request.user.username.startswith("FAC-"):
         messages.error(request, "Only faculty accounts can access this page")
         return redirect("faculty-login")
-    
+
     faculty = Faculty.objects.get(faculty_id=request.user.username)
     subject = Subjects.objects.get(subject_code=subject_code)
-
+    grades = Grades.objects.filter(subject=subject)
     subject.formatted_schedule = f"{subject.schedule.strftime('%I:%M %p')}"
-
     students = Student.objects.filter(year_level=subject.year_level)
+
+    # Handle POST request for grade changes
+    if request.method == "POST":
+        try:
+            grade_input = request.POST.get("grade_input")
+            student_id = request.POST.get("student_id")
+
+            student = Student.objects.get(
+                student_id=student_id
+            )  # You'll need to add this to your form
+
+            # Validate grade input
+            if grade_input is None or not grade_input.isdigit():
+                raise ValueError("Invalid grade value")
+
+            grade = int(grade_input)
+            if not (0 <= grade <= 100):
+                raise ValueError("Grade must be between 0 and 100")
+
+            # Get or create grade object
+            grade_obj, created = Grades.objects.get_or_create(
+                student=student, subject=subject, defaults={"grade": grade}
+            )
+
+            # If grade object already existed, update it
+            if not created:
+                grade_obj.grade = grade
+                grade_obj.save()
+
+            messages.success(request, "Grade updated successfully")
+
+        except ValueError as e:
+            messages.error(request, str(e))
+        except Exception as e:
+            messages.error(request, "An error occurred while updating the grade")
+
+        return redirect("faculty-gradebook-view", subject_code=subject_code)
+
+    # Create a dictionary of student_id: grade
+    grade_dict = {grade.student.student_id: grade.grade for grade in grades}
+
+    # Assign grades to students
+    for student in students:
+        student.grade = grade_dict.get(student.student_id, "")
 
     context = {
         "faculty_id": faculty.faculty_id,
@@ -180,6 +223,43 @@ def gradebook_view(request, subject_code):
     }
 
     return render(request, "faculty/gradebook_view.html", context)
+
+
+@login_required(login_url="faculty-login")
+def clear_grade(request, subject_code):
+    if not request.user.username.startswith("FAC-"):
+        messages.error(request, "Only faculty accounts can access this page")
+        return redirect("faculty-login")
+
+    if request.method != "POST":
+        messages.error(request, "Invalid request method")
+        return redirect("faculty-gradebook-view", subject_code=subject_code)
+
+    try:
+        # Get necessary objects
+        student_id = request.POST.get("student_id")
+        subject = Subjects.objects.get(subject_code=subject_code)
+        student = Student.objects.get(student_id=student_id)
+
+        # Try to find and delete the grade
+        try:
+            grade = Grades.objects.get(student=student, subject=subject)
+            grade.delete()
+            messages.success(
+                request,
+                f"Grade cleared successfully for {student.first_name} {student.last_name}",
+            )
+        except Grades.DoesNotExist:
+            messages.info(request, "No grade found to clear")
+
+    except Student.DoesNotExist:
+        messages.error(request, "Student not found")
+    except Subjects.DoesNotExist:
+        messages.error(request, "Subject not found")
+    except Exception as e:
+        messages.error(request, f"An error occurred while clearing the grade: {str(e)}")
+
+    return redirect("faculty-gradebook-view", subject_code=subject_code)
 
 
 @login_required(login_url="faculty-login")
@@ -407,9 +487,9 @@ def logout(request):
     if not request.user.username.startswith("FAC-"):
         messages.error(request, "Only faculty accounts can access this page")
         return redirect("faculty-login")
-    
+
     faculty_id = request.user.username
-    
+
     if request.method == "POST":
         auth_logout(request)
 
