@@ -55,6 +55,24 @@ def family(request):
 
 
 @login_required(login_url="parent-login")
+def gradebooks(request):
+    if not request.user.username.startswith("PAR-"):
+        messages.error(request, "Only parent accounts can access this page")
+        return redirect("parent-login")
+
+    parent = Parent.objects.get(parent_id=request.user.username)
+
+    context = {
+        "parent_id": parent.parent_id,
+        "first_name": parent.first_name,
+        "last_name": parent.last_name,
+        "profile_pic": parent.profile_pic,
+    }
+
+    return render(request, "parents/gradebooks.html", context)
+
+
+@login_required(login_url="parent-login")
 def chat(request):
     if not request.user.username.startswith("PAR-"):
         messages.error(request, "Only parent accounts can access this page")
