@@ -16,8 +16,63 @@
             {% endfor %}
         </div>
         {% endif %}
-        
-        <h1>Student Chat</h1>
+
+        <div class="row mb-4">
+            <div class="col">
+                <h1 class="display-6 fw-bold mb-3">Messages</h1>
+            </div>
+        </div>
+
+        <!-- Conversations List -->
+        <div class="list-group">
+            <!-- Conversation Item 1 -->
+            <a href="#" class="list-group-item list-group-item-action">
+                <div class="d-flex w-100">
+                    <div class="me-3">
+                        <img src="https://via.placeholder.com/45" class="rounded-circle">
+                    </div>
+                    <div class="flex-grow-1">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h6 class="mb-0">John Smith</h6>
+                            <small class="text-muted">2:30 PM</small>
+                        </div>
+                        <p class="mb-0 text-muted small">When is the assignment due?</p>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Conversation Item 2 -->
+            <a href="#" class="list-group-item list-group-item-action">
+                <div class="d-flex w-100">
+                    <div class="me-3">
+                        <img src="https://via.placeholder.com/45" class="rounded-circle">
+                    </div>
+                    <div class="flex-grow-1">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h6 class="mb-0">Sarah Johnson</h6>
+                            <small class="text-muted">Yesterday</small>
+                        </div>
+                        <p class="mb-0 text-muted small">The lecture notes have been uploaded</p>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Conversation Item 3 -->
+            <a href="{% url 'student-chat-view' %}" class="list-group-item list-group-item-action">
+                <div class="d-flex w-100">
+                    <div class="me-3">
+                        <img src="https://via.placeholder.com/45" class="rounded-circle">
+                    </div>
+                    <div class="flex-grow-1">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h6 class="mb-0">Prof. Williams</h6>
+                            <small class="text-muted">2 days ago</small>
+                        </div>
+                        <p class="mb-0 text-muted small">Office hours cancelled today</p>
+                    </div>
+                </div>
+            </a>
+        </div>
     </div>
 </main>
 {% endblock %}

@@ -169,6 +169,24 @@ def chat(request):
 
 
 @login_required(login_url="student-login")
+def chat_view(request):
+    if not request.user.username.startswith("STU-"):
+        messages.error(request, "Only student accounts can access this page")
+        return redirect("student-login")
+
+    student = Student.objects.get(student_id=request.user.username)
+
+    context = {
+        "student_id": student.student_id,
+        "first_name": student.first_name,
+        "last_name": student.last_name,
+        "profile_pic": student.profile_pic,
+    }
+
+    return render(request, "students/chat_view.html", context)
+
+
+@login_required(login_url="student-login")
 def profile(request):
     if not request.user.username.startswith("STU-"):
         messages.error(request, "Only student accounts can access this page")

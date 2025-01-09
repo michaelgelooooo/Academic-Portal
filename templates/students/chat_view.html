@@ -1,0 +1,95 @@
+{% extends 'base/students_base.html' %}
+
+{% block title %}Chat{% endblock %}
+
+{% block content %}
+<main>
+    <div class="container p-5" style="height: 85vh;">
+        <div class="card shadow-sm h-100">
+            <div class="card-header p-3">
+                <div class="col-12">
+                    <div class="d-flex align-items-center">
+                        <img src="https://via.placeholder.com/40" class="rounded-circle me-3">
+                        <div>
+                            <h6 class="mb-0">John Smith</h6>
+                            <small class="text-muted">Online</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Chat Messages -->
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="chat-container p-3" style="height: calc(70vh - 160px); overflow-y: auto;">
+                            <!-- Received Message -->
+                            <div class="d-flex mb-3">
+                                <div class="bg-light rounded p-3" style="max-width: 75%;">
+                                    <p class="mb-0">Hey, when is the assignment due? I couldn't find the deadline on the
+                                        portal.
+                                    </p>
+                                    <small class="text-muted">10:30 AM</small>
+                                </div>
+                            </div>
+                            <div class="d-flex mb-3">
+                                <div class="bg-light rounded p-3" style="max-width: 75%;">
+                                    <p class="mb-0">Hey, when is the assignment due? I couldn't find the deadline on the
+                                        portal.
+                                    </p>
+                                    <small class="text-muted">10:30 AM</small>
+                                </div>
+                            </div>
+                            <div class="d-flex mb-3">
+                                <div class="bg-light rounded p-3" style="max-width: 75%;">
+                                    <p class="mb-0">Hey, when is the assignment due? I couldn't find the deadline on the
+                                        portal.
+                                    </p>
+                                    <small class="text-muted">10:30 AM</small>
+                                </div>
+                            </div>
+                            <div class="d-flex mb-3">
+                                <div class="bg-light rounded p-3" style="max-width: 75%;">
+                                    <p class="mb-0">Hey, when is the assignment due? I couldn't find the deadline on the
+                                        portal.
+                                    </p>
+                                    <small class="text-muted">10:30 AM</small>
+                                </div>
+                            </div>
+
+                            <!-- Sent Message -->
+                            <div class="d-flex mb-3 justify-content-end">
+                                <div class="bg-success text-white rounded p-3" style="max-width: 75%;">
+                                    <p class="mb-0">The assignment is due next Friday at midnight. Don't forget to
+                                        submit it
+                                        through the assignments section!</p>
+                                    <small class="text-white-50">10:32 AM</small>
+                                </div>
+                            </div>
+
+                            <!-- Received Message -->
+                            <div class="d-flex mb-3">
+                                <div class="bg-light rounded p-3" style="max-width: 75%;">
+                                    <p class="mb-0">Thanks! Got it.</p>
+                                    <small class="text-muted">10:33 AM</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-footer p-3">
+                <div class="row">
+                    <div class="col-12">
+                        <form class="d-flex gap-2">
+                            <input type="text" class="form-control" placeholder="Type your message...">
+                            <button type="submit" class="btn btn-success">Send</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock %}
