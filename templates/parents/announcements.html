@@ -1,0 +1,89 @@
+{% extends 'base/parents_base.html' %}
+
+{% block title %}Announcements{% endblock %}
+
+{% block content %}
+<main>
+    <div class="container p-5">
+        {% if messages %}
+        <div class="container mt-3">
+            {% for message in messages %}
+            <div class="alert alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags }}{% endif %} alert-dismissible fade show"
+                role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        
+        <!-- Page Header -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <h1 class="display-6 fw-bold mb-3">Announcements</h1>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12">
+                {% if announcements %}
+                {% for announcement in announcements %}
+                <!-- Card -->
+                <div class="card border-0 shadow-sm mb-4" data-bs-toggle="modal" data-bs-target="#announcementModal{{ announcement.id }}">
+                    <div class="card-body p-4">
+                        <div class="d-flex justify-content-between align-items-start mb-3">
+                            <h2 class="h4 fw-semibold text-primary mb-0">{{ announcement.announcement_title }}</h2>
+                            <span class="bg-light rounded-pill px-3 py-2 small d-flex align-items-center">
+                                <i class="fas fa-calendar-alt me-2"></i>
+                                Posted on: {{ announcement.announcement_date|date:"F j, Y" }}
+                            </span>
+                        </div>
+                        
+                        <p class="card-text mb-3">{{ announcement.announcement_content|truncatewords:30 }}</p>
+                        
+                        <div class="d-flex align-items-center">
+                            <span class="text-primary d-flex align-items-center small">
+                                Click to read more 
+                                <i class="fas fa-arrow-right ms-2"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Modal -->
+                <div class="modal fade" id="announcementModal{{ announcement.id }}" tabindex="-1"
+                    aria-labelledby="modalLabel{{ announcement.id }}" aria-hidden="true">
+                    <div class="modal-dialog modal-lg modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="modalLabel{{ announcement.id }}">{{ announcement.announcement_title }}</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <p class="text-muted mb-3">
+                                    <i class="fas fa-calendar-alt me-1"></i>
+                                    Posted on: {{ announcement.announcement_date|date:"F j, Y" }}
+                                </p>
+                                <div class="announcement-content">
+                                    {{ announcement.announcement_content }}
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+                {% else %}
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle me-2"></i>
+                    No announcements available at this time.
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock %}

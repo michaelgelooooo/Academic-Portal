@@ -9,7 +9,7 @@ from django.contrib.auth import (
 from django.contrib import messages
 from .forms import LoginForm, EditProfileForm
 from .models import Parent
-from Academy.models import UserAccessLogs
+from Academy.models import Announcements, UserAccessLogs
 from Students.models import Student, Grades
 from Faculty.models import Subjects
 from datetime import datetime, timedelta
@@ -147,6 +147,27 @@ def gradebook_view(request, student_id):
     }
 
     return render(request, "parents/gradebook_view.html", context)
+
+
+@login_required(login_url="parent-login")
+def announcements(request):
+    if not request.user.username.startswith("PAR-"):
+        messages.error(request, "Only parent accounts can access this page")
+        return redirect("parent-login")
+
+    parent = Parent.objects.get(parent_id=request.user.username)
+
+    announcements_to_display = Announcements.objects.all()
+
+    context = {
+        "parent_id": parent.parent_id,
+        "first_name": parent.first_name,
+        "last_name": parent.last_name,
+        "profile_pic": parent.profile_pic,
+        "announcements": announcements_to_display,
+    }
+
+    return render(request, "parents/announcements.html", context)
 
 
 @login_required(login_url="parent-login")

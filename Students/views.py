@@ -9,7 +9,7 @@ from django.contrib.auth import (
 from django.contrib import messages
 from .forms import LoginForm, EditProfileForm
 from .models import Student, Grades
-from Academy.models import UserAccessLogs
+from Academy.models import Announcements, UserAccessLogs
 from Faculty.models import Subjects, LectureMaterial, Tasks
 from datetime import datetime, timedelta
 from PIL import Image
@@ -151,6 +151,27 @@ def grades(request):
     }
 
     return render(request, "students/grades.html", context)
+
+
+@login_required(login_url="student-login")
+def announcements(request):
+    if not request.user.username.startswith("STU-"):
+        messages.error(request, "Only student accounts can access this page")
+        return redirect("student-login")
+
+    student = Student.objects.get(student_id=request.user.username)
+
+    announcements_to_display = Announcements.objects.all()
+
+    context = {
+        "student_id": student.student_id,
+        "first_name": student.first_name,
+        "last_name": student.last_name,
+        "profile_pic": student.profile_pic,
+        "announcements": announcements_to_display,
+    }
+
+    return render(request, "students/announcements.html", context)
 
 
 @login_required(login_url="student-login")

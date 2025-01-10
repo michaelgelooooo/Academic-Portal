@@ -2,6 +2,22 @@ from django.db import models
 
 
 # Create your models here.
+class Announcements(models.Model):
+    announcement_title = models.CharField(max_length=50)
+    announcement_content = models.TextField()
+    announcement_date = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        formatted_time = self.announcement_date.strftime("%Y-%m-%d %H:%M:%S")
+
+        return f"{self.announcement_title} Announced@{formatted_time}"
+
+    class Meta:
+        verbose_name = "Announcement"
+        verbose_name_plural = "Announcements"
+        ordering = ["announcement_date"]
+
+
 class UserAccessLogs(models.Model):
     user_name = models.CharField(max_length=50)
     user_type = models.CharField(max_length=50)
@@ -87,3 +103,17 @@ class GradeChangesLogs(models.Model):
     class Meta:
         verbose_name = "Grade Changes Log"
         verbose_name_plural = "Grade Changes Logs"
+
+
+class TaskChangesLog(models.Model):
+    task_id = models.CharField(max_length=50)
+    action = models.CharField(max_length=50)
+    log_time = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        formatted_time = self.log_time.strftime("%Y-%m-%d %H:%M:%S")
+        return f"{self.task_id} {self.action}@{formatted_time}"
+
+    class Meta:
+        verbose_name = "Task Changes Log"
+        verbose_name_plural = "Task Changes Logs"

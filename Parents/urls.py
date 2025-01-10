@@ -12,6 +12,7 @@ urlpatterns = [
         views.gradebook_view,
         name="parent-gradebooks-view",
     ),
+    path("announcements/", views.announcements, name="parent-announcements"),
     path("chat/", views.chat, name="parent-chat"),
     path("profile/", views.profile, name="parent-profile"),
     path("profile/edit", views.edit_profile, name="parent-edit-profile"),

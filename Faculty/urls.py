@@ -51,6 +51,7 @@ urlpatterns = [
         views.clear_grade,
         name="faculty-clear-grade",
     ),
+    path("announcements/", views.announcements, name="faculty-announcements"),
     path("chat/", views.chat, name="faculty-chat"),
     path("profile/", views.profile, name="faculty-profile"),
     path("profile/edit", views.edit_profile, name="faculty-edit-profile"),

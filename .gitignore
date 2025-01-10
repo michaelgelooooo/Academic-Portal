@@ -6593,3 +6593,5 @@ Students/migrations/__pycache__/0016_alter_classes_options_alter_grades_options_
 Parents/migrations/__pycache__/0004_alter_parent_options.cpython-312.pyc
 Faculty/migrations/__pycache__/0009_alter_faculty_options_alter_lecturematerial_options_and_more.cpython-312.pyc
 Faculty/migrations/__pycache__/0010_alter_tasks_task_deadline.cpython-312.pyc
+Academy/migrations/__pycache__/0012_announcements_taskchangeslog.cpython-312.pyc
+Academy/migrations/__pycache__/0013_alter_announcements_options_and_more.cpython-312.pyc

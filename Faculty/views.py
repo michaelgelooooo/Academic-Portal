@@ -9,7 +9,7 @@ from django.contrib.auth import (
 from django.contrib import messages
 from .forms import LoginForm, EditProfileForm, LectureMaterialForm
 from .models import Faculty, Subjects, LectureMaterial, Tasks
-from Academy.models import UserAccessLogs, LectureMaterialsLogs, GradeChangesLogs
+from Academy.models import Announcements, UserAccessLogs, LectureMaterialsLogs, GradeChangesLogs, TaskChangesLog
 from Students.models import Student, Classes, Grades
 from datetime import datetime, timedelta
 from PIL import Image
@@ -71,7 +71,6 @@ def subject_view(request, subject_code):
 
     tasks = Tasks.objects.filter(subject=subject)
     materials = LectureMaterial.objects.filter(subject=subject)
-    
 
     context = {
         "faculty_id": faculty.faculty_id,
@@ -203,17 +202,24 @@ def add_task(request, subject_code):
 
     # Get the date from the form
     if request.method == "POST":
-        deadline_date = request.POST.get('task_deadline')
-        
+        deadline_date = request.POST.get("task_deadline")
+
         Tasks.objects.create(
-            task_id=request.POST.get('task_id'),
-            task_title=request.POST.get('task_title'),
-            task_description=request.POST.get('task_description'),
+            task_id=request.POST.get("task_id"),
+            task_title=request.POST.get("task_title"),
+            task_description=request.POST.get("task_description"),
             task_deadline=deadline_date,  # Django will automatically convert the date string to a date object
-            subject=subject
+            subject=subject,
         )
-        
-        messages.success(request, 'Task created successfully')
+
+        task_id = request.POST.get("task_id")
+
+        TaskChangesLog.objects.create(
+            task_id=f"{subject_code} - {task_id}",
+            action="Created",
+        )
+
+        messages.success(request, "Task created successfully")
         return redirect("faculty-subject-view", subject_code=subject_code)
 
     return redirect("faculty-subject-view", subject_code=subject_code)
@@ -224,30 +230,37 @@ def edit_task(request, subject_code):
     if not request.user.username.startswith("FAC-"):
         messages.error(request, "Only faculty accounts can access this page")
         return redirect("faculty-login")
-    
+
     # Get the subject and task or return 404
     subject = get_object_or_404(Subjects, subject_code=subject_code)
-    task_id_from_form = request.POST.get('id')
+    task_id_from_form = request.POST.get("id")
     task = get_object_or_404(Tasks, id=task_id_from_form, subject=subject)
-    
+
     if request.method == "POST":
         try:
             # Update the task fields
-            task.task_id = request.POST.get('task_id')
-            task.task_title = request.POST.get('task_title')
-            task.task_description = request.POST.get('task_description')
-            task.task_deadline = request.POST.get('task_deadline')
-            
+            task.task_id = request.POST.get("task_id")
+            task.task_title = request.POST.get("task_title")
+            task.task_description = request.POST.get("task_description")
+            task.task_deadline = request.POST.get("task_deadline")
+
             # Save the updated task
             task.save()
-            
-            messages.success(request, 'Task updated successfully')
+
+            task_id = request.POST.get("task_id")
+
+            TaskChangesLog.objects.create(
+                task_id=f"{subject_code} - {task_id}",
+                action="Updated",
+            )
+
+            messages.success(request, "Task updated successfully")
             return redirect("faculty-subject-view", subject_code=subject_code)
-            
+
         except Exception as e:
-            messages.error(request, f'Error updating task: {str(e)}')
+            messages.error(request, f"Error updating task: {str(e)}")
             return redirect("faculty-subject-view", subject_code=subject_code)
-    
+
     return redirect("faculty-subject-view", subject_code=subject_code)
 
 
@@ -268,6 +281,11 @@ def delete_task(request, subject_code):
     try:
         task = Tasks.objects.get(task_id=task_id)
         task.delete()
+
+        TaskChangesLog.objects.create(
+            task_id=f"{subject_code} - {task_id}",
+            action="Updated",
+        )
 
         messages.success(
             request,
@@ -465,6 +483,27 @@ def clear_grade(request, subject_code):
         messages.error(request, f"An error occurred while clearing the grade: {str(e)}")
 
     return redirect("faculty-gradebook-view", subject_code=subject_code)
+
+
+@login_required(login_url="faculty-login")
+def announcements(request):
+    if not request.user.username.startswith("FAC-"):
+        messages.error(request, "Only faculty accounts can access this page")
+        return redirect("faculty-login")
+
+    faculty = Faculty.objects.get(faculty_id=request.user.username)
+
+    announcements_to_display = Announcements.objects.all()
+
+    context = {
+        "faculty_id": faculty.faculty_id,
+        "first_name": faculty.first_name,
+        "last_name": faculty.last_name,
+        "profile_pic": faculty.profile_pic,
+        "announcements": announcements_to_display,
+    }
+
+    return render(request, "faculty/announcements.html", context)
 
 
 @login_required(login_url="faculty-login")
