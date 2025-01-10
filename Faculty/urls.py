@@ -23,6 +23,21 @@ urlpatterns = [
         views.delete_material,
         name="faculty-subjects-material-delete",
     ),
+    path(
+        "subjects/<str:subject_code>/task/add",
+        views.add_task,
+        name="faculty-subjects-task-add",
+    ),
+    path(
+        "subjects/<str:subject_code>/task/edit",
+        views.edit_task,
+        name="faculty-subjects-task-edit",
+    ),
+    path(
+        "subjects/<str:subject_code>/task/delete",
+        views.delete_task,
+        name="faculty-subjects-task-delete",
+    ),
     path("schedule/", views.schedule, name="faculty-schedule"),
     path("advisory/", views.advisory_class, name="faculty-advisory"),
     path("gradebooks/", views.gradebooks, name="faculty-gradebooks"),

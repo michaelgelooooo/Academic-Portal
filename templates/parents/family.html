@@ -23,6 +23,7 @@
             </div>
         </div>
 
+        {% if children %}
         <div class="row row-cols-1 row-cols-lg-2 g-4">
             {% for child in children %}
             <div class="col">
@@ -64,6 +65,19 @@
             </div>
             {% endfor %}
         </div>
+        {% else %}
+            <div class="row">
+                <div class="col">
+                    <div class="card shadow-sm">
+                        <div class="card-body text-center py-5">
+                            <i class="fa-solid fa-users-slash fa-3x text-secondary mb-3"></i>
+                            <h5 class="fw-semibold text-secondary">No Children Found</h5>
+                            <p class="text-muted mb-0">You don't have any children enrolled in the academy.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
     </div>
 </main>
 {% endblock %}

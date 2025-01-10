@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Faculty, Subjects, LectureMaterial
+from .models import Faculty, Subjects, LectureMaterial, Tasks
 
 
 @admin.register(Faculty)
@@ -20,4 +20,11 @@ class SubjectsAdmin(admin.ModelAdmin):
 class LectureMaterialAdmin(admin.ModelAdmin):
     list_display = ("lecture_id", "lecture_title", "subject")
     search_fields = ("lecture_id", "lecture_title", "subject")
+    list_filter = ("subject",)
+
+
+@admin.register(Tasks)
+class TaskAdmin(admin.ModelAdmin):
+    list_display = ("task_id", "subject", "task_deadline")
+    search_fields = ("task_id", "subject", "task_deadline")
     list_filter = ("subject",)

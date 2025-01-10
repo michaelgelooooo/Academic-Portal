@@ -76,6 +76,23 @@
                 </div>
             </div>
         </div>
+        {% else %}
+        <div class="row mb-4">
+            <div class="col">
+                <h2 class="display-6 mb-3 fw-semibold">Advisory Class: {{ class_to_manage }}</h2>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <div class="card shadow-sm">
+                    <div class="card-body text-center py-5">
+                        <i class="fa-solid fa-users-slash fa-3x text-secondary mb-3"></i>
+                        <h5 class="fw-semibold text-secondary">No Students Found</h5>
+                        <p class="text-muted mb-0">You are not assigned to an advisory class.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
         {% endif %}
     </div>
 </main>

@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import (
     authenticate,
@@ -8,7 +8,7 @@ from django.contrib.auth import (
 )
 from django.contrib import messages
 from .forms import LoginForm, EditProfileForm, LectureMaterialForm
-from .models import Faculty, Subjects, LectureMaterial
+from .models import Faculty, Subjects, LectureMaterial, Tasks
 from Academy.models import UserAccessLogs, LectureMaterialsLogs, GradeChangesLogs
 from Students.models import Student, Classes, Grades
 from datetime import datetime, timedelta
@@ -69,7 +69,9 @@ def subject_view(request, subject_code):
 
     subject.formatted_schedule = f"{subject.schedule.strftime('%I:%M %p')}"
 
+    tasks = Tasks.objects.filter(subject=subject)
     materials = LectureMaterial.objects.filter(subject=subject)
+    
 
     context = {
         "faculty_id": faculty.faculty_id,
@@ -77,6 +79,7 @@ def subject_view(request, subject_code):
         "last_name": faculty.last_name,
         "profile_pic": faculty.profile_pic,
         "subject": subject,
+        "tasks": tasks,
         "materials": materials,
     }
 
@@ -186,6 +189,92 @@ def delete_material(request, subject_code):
         )
     except LectureMaterial.DoesNotExist:
         messages.info(request, "No material found to delete")
+
+    return redirect("faculty-subject-view", subject_code=subject_code)
+
+
+@login_required(login_url="faculty-login")
+def add_task(request, subject_code):
+    if not request.user.username.startswith("FAC-"):
+        messages.error(request, "Only faculty accounts can access this page")
+        return redirect("faculty-login")
+
+    subject = Subjects.objects.get(subject_code=subject_code)
+
+    # Get the date from the form
+    if request.method == "POST":
+        deadline_date = request.POST.get('task_deadline')
+        
+        Tasks.objects.create(
+            task_id=request.POST.get('task_id'),
+            task_title=request.POST.get('task_title'),
+            task_description=request.POST.get('task_description'),
+            task_deadline=deadline_date,  # Django will automatically convert the date string to a date object
+            subject=subject
+        )
+        
+        messages.success(request, 'Task created successfully')
+        return redirect("faculty-subject-view", subject_code=subject_code)
+
+    return redirect("faculty-subject-view", subject_code=subject_code)
+
+
+@login_required(login_url="faculty-login")
+def edit_task(request, subject_code):
+    if not request.user.username.startswith("FAC-"):
+        messages.error(request, "Only faculty accounts can access this page")
+        return redirect("faculty-login")
+    
+    # Get the subject and task or return 404
+    subject = get_object_or_404(Subjects, subject_code=subject_code)
+    task_id_from_form = request.POST.get('id')
+    task = get_object_or_404(Tasks, id=task_id_from_form, subject=subject)
+    
+    if request.method == "POST":
+        try:
+            # Update the task fields
+            task.task_id = request.POST.get('task_id')
+            task.task_title = request.POST.get('task_title')
+            task.task_description = request.POST.get('task_description')
+            task.task_deadline = request.POST.get('task_deadline')
+            
+            # Save the updated task
+            task.save()
+            
+            messages.success(request, 'Task updated successfully')
+            return redirect("faculty-subject-view", subject_code=subject_code)
+            
+        except Exception as e:
+            messages.error(request, f'Error updating task: {str(e)}')
+            return redirect("faculty-subject-view", subject_code=subject_code)
+    
+    return redirect("faculty-subject-view", subject_code=subject_code)
+
+
+@login_required(login_url="faculty-login")
+def delete_task(request, subject_code):
+    if not request.user.username.startswith("FAC-"):
+        messages.error(request, "Only faculty accounts can access this page")
+        return redirect("faculty-login")
+
+    if request.method != "POST":
+        messages.error(request, "Invalid request method")
+        return redirect("faculty-subject-view", subject_code=subject_code)
+
+    # Get necessary objects
+    task_id = request.POST.get("task_id")
+
+    # Try to find and delete the grade
+    try:
+        task = Tasks.objects.get(task_id=task_id)
+        task.delete()
+
+        messages.success(
+            request,
+            f"Task deleted Successfully",
+        )
+    except Tasks.DoesNotExist:
+        messages.info(request, "No task found to delete")
 
     return redirect("faculty-subject-view", subject_code=subject_code)
 

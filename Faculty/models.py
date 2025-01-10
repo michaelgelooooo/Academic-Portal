@@ -215,3 +215,19 @@ class LectureMaterial(models.Model):
         verbose_name = "Lecture Material"
         verbose_name_plural = "Lecture Materials"
         ordering = ["lecture_id"]
+
+
+class Tasks(models.Model):
+    task_id = models.CharField(max_length=20)
+    task_title = models.CharField(max_length=50)
+    task_description = models.TextField()
+    task_deadline = models.DateField()
+    subject = models.ForeignKey("Faculty.Subjects", on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"{self.subject.subject_code} - {self.task_id}"
+
+    class Meta:
+        verbose_name = "Task"
+        verbose_name_plural = "Tasks"
+        ordering = ["task_id"]
