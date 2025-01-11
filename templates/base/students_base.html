@@ -85,6 +85,11 @@
 
         <div class="mt-auto px-3 mb-3">
             <div class="list-group">
+                <a href="{% url 'student-chat-view' %}"
+                    class="list-group-item list-group-item-action py-3 rounded-3 mb-2 d-flex align-items-center">
+                    <i class="fa-solid fa-headset fa-fw me-3"></i>
+                    <span class="fw-semibold">Support & Feedback</span>
+                </a>
                 <form method="post" action="{% url 'student-logout' %}">
                     {% csrf_token %}
                     <button type="submit"

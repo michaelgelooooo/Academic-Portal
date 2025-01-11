@@ -11,7 +11,6 @@ urlpatterns = [
     path("schedule/", views.schedule, name="student-schedule"),
     path("grades/", views.grades, name="student-grades"),
     path("announcements/", views.announcements, name="student-announcements"),
-    path("chat/", views.chat, name="student-chat"),
     path("chat/view", views.chat_view, name="student-chat-view"),
     path("profile/", views.profile, name="student-profile"),
     path("profile/edit/", views.edit_profile, name="student-edit-profile"),

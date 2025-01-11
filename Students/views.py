@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import (
     authenticate,
@@ -9,7 +9,7 @@ from django.contrib.auth import (
 from django.contrib import messages
 from .forms import LoginForm, EditProfileForm
 from .models import Student, Grades
-from Academy.models import Announcements, UserAccessLogs
+from Academy.models import Announcements, SupportChat, SupportMessage, UserAccessLogs
 from Faculty.models import Subjects, LectureMaterial, Tasks
 from datetime import datetime, timedelta
 from PIL import Image
@@ -174,22 +174,40 @@ def announcements(request):
     return render(request, "students/announcements.html", context)
 
 
-@login_required(login_url="student-login")
-def chat(request):
-    if not request.user.username.startswith("STU-"):
-        messages.error(request, "Only student accounts can access this page")
-        return redirect("student-login")
+automated_message ="""St. Joseph Academy Student Portal - System Guide and Support Chat
 
-    student = Student.objects.get(student_id=request.user.username)
+Welcome to your student portal! This guide will help you navigate and make the most of the available features.
 
-    context = {
-        "student_id": student.student_id,
-        "first_name": student.first_name,
-        "last_name": student.last_name,
-        "profile_pic": student.profile_pic,
-    }
+DASHBOARD
+The Dashboard is your home screen and central hub for accessing all your academic information. From here, you can quickly access your schedule, grades, and important announcements through the featured cards.
 
-    return render(request, "students/chat.html", context)
+MAIN NAVIGATION FEATURES
+
+Subjects
+You can view all your enrolled courses, access course materials and resources, and see subject-specific announcements and assignments.
+
+Schedule
+You can check your daily and weekly class schedules, view class timings, and track upcoming classes.
+
+Grades
+You can review your current academic performance, view overall subject grades, and monitor your academic progress.
+
+Announcements
+You can stay updated with school-wide notifications, read important administrative messages, and view event announcements.
+
+Support & Feedback
+You can submit technical issues, request assistance, provide feedback about the portal, contact academic support, and access help resources.
+
+Additional Tips
+- Keep your login credentials secure
+- Log out after each session using the Logout button
+- Check announcements regularly for important updates
+- Use the Support & Feedback section if you encounter any issues
+- Bookmark frequently accessed pages for quick access
+
+Best Practices
+Check your dashboard daily for new announcements. Review your grades regularly to track your progress. Verify your schedule at the start of each week. Report any technical issues promptly through this System Support & Feedback chat.
+"""
 
 
 @login_required(login_url="student-login")
@@ -200,11 +218,44 @@ def chat_view(request):
 
     student = Student.objects.get(student_id=request.user.username)
 
+    conversation = SupportChat.objects.filter(chat_recipient=request.user).first()
+
+    if conversation is None:
+        SupportChat.objects.create(chat_recipient=request.user)
+
+        new_conversation = SupportChat.objects.filter(chat_recipient=request.user).first()
+
+        SupportMessage.objects.create(conversation=new_conversation, content=automated_message)
+
+        return redirect("student-chat-view")
+
+    if request.method == "POST":
+        # Get the message content and trim whitespace
+        message_content = request.POST.get("message", "").strip()
+
+        # Check if the message is valid (not empty after trimming)
+        if message_content:
+            # Create and save the new SupportMessage
+            SupportMessage.objects.create(
+                conversation=conversation,
+                sender=request.user,
+                content=message_content,
+            )
+            messages.success(request, "Message sent successfully!")
+        else:
+            # Handle empty or whitespace-only input
+            messages.error(request, "Message cannot be empty or whitespace only.")
+
+    # Fetch all chat messages for this conversation, ordered newest to oldest
+    chats = SupportMessage.objects.filter(conversation=conversation)[::-1]
+
     context = {
         "student_id": student.student_id,
         "first_name": student.first_name,
         "last_name": student.last_name,
         "profile_pic": student.profile_pic,
+        "chats": chats,
+        "conversation": conversation,
     }
 
     return render(request, "students/chat_view.html", context)

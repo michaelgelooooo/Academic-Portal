@@ -9,7 +9,7 @@ from django.contrib.auth import (
 from django.contrib import messages
 from .forms import LoginForm, EditProfileForm, LectureMaterialForm
 from .models import Faculty, Subjects, LectureMaterial, Tasks
-from Academy.models import Announcements, UserAccessLogs, LectureMaterialsLogs, GradeChangesLogs, TaskChangesLog
+from Academy.models import Announcements, SupportChat, SupportMessage, UserAccessLogs, LectureMaterialsLogs, GradeChangesLogs, TaskChangesLog
 from Students.models import Student, Classes, Grades
 from datetime import datetime, timedelta
 from PIL import Image
@@ -506,22 +506,94 @@ def announcements(request):
     return render(request, "faculty/announcements.html", context)
 
 
+automated_message ="""St. Joseph Academy Faculty Portal - System Guide and Support Chat
+
+Welcome to your faculty portal! This guide will help you navigate and maximize the use of your administrative and teaching tools.
+
+DASHBOARD
+The Dashboard serves as your command center for managing classes and accessing academic resources. From here, you can efficiently monitor your teaching responsibilities through the quick-access cards for subjects, schedules, gradebooks, and announcements.
+
+MAIN NAVIGATION FEATURES
+
+Advisory Class
+You can manage your advisory class, track student attendance, and oversee class-specific activities and concerns.
+
+Subjects
+You can access your teaching subjects, manage course materials, create assignments, and post subject-specific announcements.
+
+Schedule
+You can view your teaching schedule, check class timings, and manage your academic calendar.
+
+Gradebooks
+You can input and manage student grades, track academic performance, generate progress reports, and maintain assessment records.
+
+Announcements
+You can stay informed about school updates and create announcements for your classes and advisory groups.
+
+Support & Feedback
+You can report technical issues, request assistance, submit system feedback, and access faculty resources and guides.
+
+Additional Tips
+- Maintain password security and regular password updates
+- Always log out after completing your session
+- Review announcements daily for important administrative updates
+- Utilize the Support & Feedback section for technical assistance
+- Save frequently accessed pages for quick navigation
+
+Best Practices
+Update gradebooks regularly to maintain current student records. Check announcements daily for important administrative notices. Review your teaching schedule at the start of each week. Monitor student performance consistently through the gradebook feature. Report any technical issues immediately through this System Support & Feedback chat.
+"""
+
+
 @login_required(login_url="faculty-login")
-def chat(request):
+def chat_view(request):
     if not request.user.username.startswith("FAC-"):
         messages.error(request, "Only faculty accounts can access this page")
         return redirect("faculty-login")
 
     faculty = Faculty.objects.get(faculty_id=request.user.username)
 
+    conversation = SupportChat.objects.filter(chat_recipient=request.user).first()
+
+    if conversation is None:
+        SupportChat.objects.create(chat_recipient=request.user)
+
+        new_conversation = SupportChat.objects.filter(chat_recipient=request.user).first()
+
+        SupportMessage.objects.create(conversation=new_conversation, content=automated_message)
+
+        return redirect("faculty-chat-view")
+
+    if request.method == "POST":
+        # Get the message content and trim whitespace
+        message_content = request.POST.get("message", "").strip()
+
+        # Check if the message is valid (not empty after trimming)
+        if message_content:
+            # Create and save the new SupportMessage
+            SupportMessage.objects.create(
+                conversation=conversation,
+                sender=request.user,
+                content=message_content,
+            )
+            messages.success(request, "Message sent successfully!")
+        else:
+            # Handle empty or whitespace-only input
+            messages.error(request, "Message cannot be empty or whitespace only.")
+
+    # Fetch all chat messages for this conversation, ordered newest to oldest
+    chats = SupportMessage.objects.filter(conversation=conversation)[::-1]
+
     context = {
         "faculty_id": faculty.faculty_id,
         "first_name": faculty.first_name,
         "last_name": faculty.last_name,
         "profile_pic": faculty.profile_pic,
+        "chats": chats,
+        "conversation": conversation,
     }
 
-    return render(request, "faculty/chat.html", context)
+    return render(request, "faculty/chat_view.html", context)
 
 
 @login_required(login_url="faculty-login")

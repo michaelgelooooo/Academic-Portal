@@ -9,7 +9,7 @@ from django.contrib.auth import (
 from django.contrib import messages
 from .forms import LoginForm, EditProfileForm
 from .models import Parent
-from Academy.models import Announcements, UserAccessLogs
+from Academy.models import Announcements, SupportChat, SupportMessage, UserAccessLogs
 from Students.models import Student, Grades
 from Faculty.models import Subjects
 from datetime import datetime, timedelta
@@ -170,22 +170,88 @@ def announcements(request):
     return render(request, "parents/announcements.html", context)
 
 
+automated_message ="""St. Joseph Academy Parent Portal - System Guide and Support Chat
+
+Welcome to your parent portal! This guide will help you stay connected with your child's academic journey and keep track of their progress at St. Joseph Academy.
+
+DASHBOARD
+The Dashboard is your central hub for monitoring your child's academic performance and staying updated with school announcements. From here, you can easily access your family information, view grades, and read important school updates.
+
+MAIN NAVIGATION FEATURES
+
+Family
+You can access and update your family's information, manage contact details, and view your children's basic academic profiles.
+
+Gradebooks
+You can monitor your children's academic performance, view current grades across all subjects, track assessment results, and follow their educational progress.
+
+Announcements
+You can stay informed about school events, read administrative updates, and receive important notifications about academic activities and schedules.
+
+Support & Feedback
+You can report technical issues, request assistance, submit inquiries about the portal, and access parent resources and guides.
+
+Additional Tips
+- Keep your login credentials secure and confidential
+- Remember to log out after each session
+- Check announcements regularly for important school updates
+- Use the Support & Feedback section if you need technical assistance
+- Save frequently accessed pages for easier navigation
+
+Best Practices
+Review your child's grades regularly to stay informed of their academic progress. Check announcements daily for important school communications. Update your contact information promptly if changes occur. Reach out through the Support & Feedback system if you encounter any technical issues or have questions about using the portal.
+"""
+
+
 @login_required(login_url="parent-login")
-def chat(request):
+def chat_view(request):
     if not request.user.username.startswith("PAR-"):
         messages.error(request, "Only parent accounts can access this page")
         return redirect("parent-login")
 
     parent = Parent.objects.get(parent_id=request.user.username)
 
+    conversation = SupportChat.objects.filter(chat_recipient=request.user).first()
+
+    if conversation is None:
+        SupportChat.objects.create(chat_recipient=request.user)
+
+        new_conversation = SupportChat.objects.filter(chat_recipient=request.user).first()
+
+        SupportMessage.objects.create(conversation=new_conversation, content=automated_message)
+
+        return redirect("parent-chat-view")
+
+    if request.method == "POST":
+        # Get the message content and trim whitespace
+        message_content = request.POST.get("message", "").strip()
+
+        # Check if the message is valid (not empty after trimming)
+        if message_content:
+            # Create and save the new SupportMessage
+            SupportMessage.objects.create(
+                conversation=conversation,
+                sender=request.user,
+                content=message_content,
+            )
+            messages.success(request, "Message sent successfully!")
+        else:
+            # Handle empty or whitespace-only input
+            messages.error(request, "Message cannot be empty or whitespace only.")
+
+    # Fetch all chat messages for this conversation, ordered newest to oldest
+    chats = SupportMessage.objects.filter(conversation=conversation)[::-1]
+
     context = {
         "parent_id": parent.parent_id,
         "first_name": parent.first_name,
         "last_name": parent.last_name,
         "profile_pic": parent.profile_pic,
+        "chats": chats,
+        "conversation": conversation,
     }
 
-    return render(request, "parents/chat.html", context)
+    return render(request, "parents/chat_view.html", context)
 
 
 @login_required(login_url="parent-login")

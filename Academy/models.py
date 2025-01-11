@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 
 # Create your models here.
@@ -16,6 +17,39 @@ class Announcements(models.Model):
         verbose_name = "Announcement"
         verbose_name_plural = "Announcements"
         ordering = ["announcement_date"]
+
+
+class SupportChat(models.Model):
+    chat_recipient = models.ForeignKey(User, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.chat_recipient.username} Support Chat"
+
+    class Meta:
+        verbose_name = "Support Chat"
+        verbose_name_plural = "Support Chats"
+        ordering = ["-created_at"]
+
+
+class SupportMessage(models.Model):
+    conversation = models.ForeignKey(SupportChat, on_delete=models.CASCADE)
+
+    def get_default_user():
+        return User.objects.get(username="admin")
+
+    sender = models.ForeignKey(User, on_delete=models.CASCADE, default=get_default_user)
+    content = models.TextField()
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    def str(self):
+        sender_type = "Admin" if self.sender.is_staff else self.sender.username
+        return f"Message from {sender_type} @{self.timestamp}"
+
+    class Meta:
+        verbose_name = "Support Message"
+        verbose_name_plural = "Support Messages"
+        ordering = ["-timestamp"]
 
 
 class UserAccessLogs(models.Model):

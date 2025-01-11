@@ -6595,3 +6595,6 @@ Faculty/migrations/__pycache__/0009_alter_faculty_options_alter_lecturematerial_
 Faculty/migrations/__pycache__/0010_alter_tasks_task_deadline.cpython-312.pyc
 Academy/migrations/__pycache__/0012_announcements_taskchangeslog.cpython-312.pyc
 Academy/migrations/__pycache__/0013_alter_announcements_options_and_more.cpython-312.pyc
+Academy/migrations/__pycache__/0014_supportchat_supportmessage.cpython-312.pyc
+Academy/migrations/__pycache__/0015_alter_supportmessage_sender.cpython-312.pyc
+Academy/migrations/__pycache__/0016_alter_supportmessage_sender.cpython-312.pyc

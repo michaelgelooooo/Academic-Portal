@@ -1,6 +1,8 @@
 from django.contrib import admin
 from .models import (
     Announcements,
+    SupportChat,
+    SupportMessage,
     UserAccessLogs,
     UserAccountLogs,
     SubjectsChangesLogs,
@@ -16,6 +18,20 @@ class AnnouncementsAdmin(admin.ModelAdmin):
     list_display = ("announcement_title", "announcement_content", "announcement_date")
     search_fields = ("announcement_title", "announcement_content", "announcement_date")
     readonly_fields = ("announcement_date",)
+
+
+@admin.register(SupportChat)
+class SupportChatAdmin(admin.ModelAdmin):
+    list_display = ("chat_recipient", "created_at")
+    seach_fields = ("chat_recipient", "created_at")
+    readonly_fields = ("created_at",)
+
+
+@admin.register(SupportMessage)
+class SupportMessageAdmin(admin.ModelAdmin):
+    list_display = ("conversation", "sender", "timestamp")
+    seach_fields = ("conversation", "sender", "timestamp")
+    readonly_fields = ("timestamp",)
 
 
 class BaseLogsAdmin(admin.ModelAdmin):
