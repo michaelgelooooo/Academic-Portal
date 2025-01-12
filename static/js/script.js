@@ -23,3 +23,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
     userTypes.forEach(userType => setupProfilePicPreview(userType));
 });
+
+function scrollToBottom() {
+    const chatContainer = document.querySelector('.chat-container');
+    chatContainer.scrollTop = chatContainer.scrollHeight;
+}
+
+// Call this function after the page loads
+document.addEventListener('DOMContentLoaded', scrollToBottom);

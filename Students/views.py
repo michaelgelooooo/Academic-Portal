@@ -70,7 +70,7 @@ def subject_view(request, subject_code):
     subject.formatted_schedule = f"{subject.schedule.strftime('%I:%M %p')}"
     materials = LectureMaterial.objects.filter(subject=subject)
 
-    tasks = Tasks.objects.filter(subject=subject)
+    tasks = Tasks.objects.filter(subject=subject).order_by('-task_deadline')
 
     context = {
         "student_id": student.student_id,
@@ -161,7 +161,7 @@ def announcements(request):
 
     student = Student.objects.get(student_id=request.user.username)
 
-    announcements_to_display = Announcements.objects.all()
+    announcements_to_display = Announcements.objects.all().order_by("-announcement_date")
 
     context = {
         "student_id": student.student_id,

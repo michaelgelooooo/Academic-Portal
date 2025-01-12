@@ -169,6 +169,14 @@ def create_classes(sender, instance, created, **kwargs):
         )
 
 
+@receiver(pre_delete, sender=Classes)
+def handle_class_deletion(sender, instance, **kwargs):
+    ClassChangesLogs.objects.create(
+        class_name=instance.year_level,
+        action="Deleted"
+    )
+
+
 class Grades(models.Model):
     student = models.ForeignKey(
         "Students.Student", on_delete=models.CASCADE, blank=True

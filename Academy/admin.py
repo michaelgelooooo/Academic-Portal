@@ -26,12 +26,30 @@ class SupportChatAdmin(admin.ModelAdmin):
     seach_fields = ("chat_recipient", "created_at")
     readonly_fields = ("created_at",)
 
+    def has_add_permission(self, request):
+        return False
+
+    def has_change_permission(self, request, obj=None):
+        return False
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+
 
 @admin.register(SupportMessage)
 class SupportMessageAdmin(admin.ModelAdmin):
     list_display = ("conversation", "sender", "timestamp")
     seach_fields = ("conversation", "sender", "timestamp")
     readonly_fields = ("timestamp",)
+
+    def has_add_permission(self, request):
+        return False
+
+    def has_change_permission(self, request, obj=None):
+        return False
+
+    def has_delete_permission(self, request, obj=None):
+        return False
 
 
 class BaseLogsAdmin(admin.ModelAdmin):

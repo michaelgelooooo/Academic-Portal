@@ -157,7 +157,7 @@ def announcements(request):
 
     parent = Parent.objects.get(parent_id=request.user.username)
 
-    announcements_to_display = Announcements.objects.all()
+    announcements_to_display = Announcements.objects.all().order_by("-announcement_date")
 
     context = {
         "parent_id": parent.parent_id,

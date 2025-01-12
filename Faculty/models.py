@@ -172,6 +172,15 @@ def create_subject(sender, instance, created, **kwargs):
         )
 
 
+@receiver(pre_delete, sender=Subjects)
+def handle_class_deletion(sender, instance, **kwargs):
+    SubjectsChangesLogs.objects.create(
+        subject_code=instance.subject_code,
+        subject_name=instance.subject_name,
+        action="Deleted",
+    )
+
+
 def lecture_material_path(instance, filename):
     # Get the file extension from the original filename
     file_extension = filename.split(".")[-1]
