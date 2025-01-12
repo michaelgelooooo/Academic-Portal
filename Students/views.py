@@ -69,7 +69,7 @@ def subject_view(request, subject_code):
 
     subject.formatted_schedule = f"{subject.schedule.strftime('%I:%M %p')}"
     materials = LectureMaterial.objects.filter(subject=subject)
-    
+
     tasks = Tasks.objects.filter(subject=subject)
 
     context = {
@@ -174,7 +174,7 @@ def announcements(request):
     return render(request, "students/announcements.html", context)
 
 
-automated_message ="""St. Joseph Academy Student Portal - System Guide and Support Chat
+automated_message = """St. Joseph Academy Student Portal - System Guide and Support Chat
 
 Welcome to your student portal! This guide will help you navigate and make the most of the available features.
 
@@ -223,9 +223,13 @@ def chat_view(request):
     if conversation is None:
         SupportChat.objects.create(chat_recipient=request.user)
 
-        new_conversation = SupportChat.objects.filter(chat_recipient=request.user).first()
+        new_conversation = SupportChat.objects.filter(
+            chat_recipient=request.user
+        ).first()
 
-        SupportMessage.objects.create(conversation=new_conversation, content=automated_message)
+        SupportMessage.objects.create(
+            conversation=new_conversation, content=automated_message
+        )
 
         return redirect("student-chat-view")
 

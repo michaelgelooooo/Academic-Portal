@@ -5,6 +5,7 @@ from .models import SupportChat, SupportMessage
 from Students.models import Student
 from Faculty.models import Faculty
 from Parents.models import Parent
+from datetime import datetime
 
 
 # Create your views here.
@@ -34,15 +35,28 @@ def chat(request):
 
     conversations = SupportChat.objects.all()
 
+    # Add latest message and user info to each conversation
     for conversation in conversations:
-        latest = SupportMessage.objects.filter(conversation=conversation).first()
+        latest = (
+            SupportMessage.objects.filter(conversation=conversation)
+            .order_by("-timestamp")
+            .first()
+        )
         userinfo = get_user_info(conversation.chat_recipient)
 
         conversation.latest_message = latest
         conversation.user_info = userinfo
 
+    # Sort the conversations by the timestamp of the latest message
+    sorted_conversations = sorted(
+        conversations,
+        key=lambda c: c.latest_message.timestamp if c.latest_message else datetime.min,
+        reverse=True,
+    )
+
+    # Now sorted_conversations is in descending order of the latest message's timestamp
     context = {
-        "conversations": conversations,
+        "conversations": sorted_conversations,
     }
 
     return render(request, "admin/chat.html", context)
@@ -57,7 +71,6 @@ def chat_view(request, pk):
     # Fetch the conversation
     conversation = get_object_or_404(SupportChat, pk=pk)
     user_info = get_user_info(conversation.chat_recipient)
-
 
     if request.method == "POST":
         # Get the message content and trim whitespace
@@ -75,7 +88,6 @@ def chat_view(request, pk):
         else:
             # Handle empty or whitespace-only input
             messages.error(request, "Message cannot be empty or whitespace only.")
-
 
     # Fetch all chat messages for this conversation, ordered newest to oldest
     chats = SupportMessage.objects.filter(conversation=conversation)[::-1]

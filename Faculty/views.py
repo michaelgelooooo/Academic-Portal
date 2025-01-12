@@ -9,7 +9,15 @@ from django.contrib.auth import (
 from django.contrib import messages
 from .forms import LoginForm, EditProfileForm, LectureMaterialForm
 from .models import Faculty, Subjects, LectureMaterial, Tasks
-from Academy.models import Announcements, SupportChat, SupportMessage, UserAccessLogs, LectureMaterialsLogs, GradeChangesLogs, TaskChangesLog
+from Academy.models import (
+    Announcements,
+    SupportChat,
+    SupportMessage,
+    UserAccessLogs,
+    LectureMaterialsLogs,
+    GradeChangesLogs,
+    TaskChangesLog,
+)
 from Students.models import Student, Classes, Grades
 from datetime import datetime, timedelta
 from PIL import Image
@@ -506,7 +514,7 @@ def announcements(request):
     return render(request, "faculty/announcements.html", context)
 
 
-automated_message ="""St. Joseph Academy Faculty Portal - System Guide and Support Chat
+automated_message = """St. Joseph Academy Faculty Portal - System Guide and Support Chat
 
 Welcome to your faculty portal! This guide will help you navigate and maximize the use of your administrative and teaching tools.
 
@@ -558,9 +566,13 @@ def chat_view(request):
     if conversation is None:
         SupportChat.objects.create(chat_recipient=request.user)
 
-        new_conversation = SupportChat.objects.filter(chat_recipient=request.user).first()
+        new_conversation = SupportChat.objects.filter(
+            chat_recipient=request.user
+        ).first()
 
-        SupportMessage.objects.create(conversation=new_conversation, content=automated_message)
+        SupportMessage.objects.create(
+            conversation=new_conversation, content=automated_message
+        )
 
         return redirect("faculty-chat-view")
 

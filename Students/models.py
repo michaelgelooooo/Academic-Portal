@@ -22,7 +22,9 @@ class Student(models.Model):
     )
     email = models.EmailField(unique=True)
     phone_number = models.CharField(max_length=15)
-    parent = models.ForeignKey("Parents.Parent", on_delete=models.SET_NULL, null=True, blank=True)
+    parent = models.ForeignKey(
+        "Parents.Parent", on_delete=models.SET_NULL, null=True, blank=True
+    )
     password = models.CharField(max_length=100)
     profile_pic = models.ImageField(
         upload_to=profile_pic_path,

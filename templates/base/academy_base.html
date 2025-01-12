@@ -29,16 +29,18 @@
             </button>
             <div class="collapse navbar-collapse flex-column" id="navbarNavAltMarkup">
                 <div class="navbar-nav ms-auto">
-                    <a class="nav-link fs-6 {% if request.resolver_match.url_name == 'index' %}active{% endif %}" href="{% url 'index' %}">Home</a>
-                    <a class="nav-link fs-6 {% if request.resolver_match.url_name == 'about' %}active{% endif %}" href="{% url 'about' %}">About</a>
+                    <a class="nav-link fs-6 {% if request.resolver_match.url_name == 'index' %}active{% endif %}"
+                        href="{% url 'index' %}">Home</a>
+                    <a class="nav-link fs-6 {% if request.resolver_match.url_name == 'about' %}active{% endif %}"
+                        href="{% url 'about' %}">About</a>
                 </div>
             </div>
         </div>
     </nav>
 
     <main>
-            {% block content %}
-            {% endblock %}
+        {% block content %}
+        {% endblock %}
     </main>
 
     <footer class="bg-light text-dark py-4 mt-auto">
@@ -80,7 +82,11 @@
                         <div>
                             <h5 class="text-primary text-center">Follow Us</h5>
                             <ul class="list-unstyled">
-                                <li><a href="#" class="text-dark text-decoration-none"><i class="fa-brands fa-facebook me-2"></i>SJABI Barugo</a></li>
+                                <li>
+                                    <a href="#" class="text-dark text-decoration-none">
+                                        <i class="fa-brands fa-facebook me-2"></i>SJABI Barugo
+                                    </a>
+                                </li>
                             </ul>
                         </div>
                     </div>

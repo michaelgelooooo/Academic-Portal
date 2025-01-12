@@ -42,7 +42,7 @@ class SupportMessage(models.Model):
     content = models.TextField()
     timestamp = models.DateTimeField(auto_now_add=True)
 
-    def str(self):
+    def __str__(self):
         sender_type = "Admin" if self.sender.is_staff else self.sender.username
         return f"Message from {sender_type} @{self.timestamp}"
 

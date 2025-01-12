@@ -170,7 +170,7 @@ def announcements(request):
     return render(request, "parents/announcements.html", context)
 
 
-automated_message ="""St. Joseph Academy Parent Portal - System Guide and Support Chat
+automated_message = """St. Joseph Academy Parent Portal - System Guide and Support Chat
 
 Welcome to your parent portal! This guide will help you stay connected with your child's academic journey and keep track of their progress at St. Joseph Academy.
 
@@ -216,9 +216,13 @@ def chat_view(request):
     if conversation is None:
         SupportChat.objects.create(chat_recipient=request.user)
 
-        new_conversation = SupportChat.objects.filter(chat_recipient=request.user).first()
+        new_conversation = SupportChat.objects.filter(
+            chat_recipient=request.user
+        ).first()
 
-        SupportMessage.objects.create(conversation=new_conversation, content=automated_message)
+        SupportMessage.objects.create(
+            conversation=new_conversation, content=automated_message
+        )
 
         return redirect("parent-chat-view")
 
