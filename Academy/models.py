@@ -36,7 +36,7 @@ class SupportMessage(models.Model):
     conversation = models.ForeignKey(SupportChat, on_delete=models.CASCADE)
 
     def get_default_user():
-        return User.objects.get(username="admin")
+        return User.objects.get(username="EduConnect")
 
     sender = models.ForeignKey(User, on_delete=models.CASCADE, default=get_default_user)
     content = models.TextField()

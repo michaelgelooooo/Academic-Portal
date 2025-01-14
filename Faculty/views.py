@@ -182,7 +182,7 @@ def delete_material(request, subject_code):
 
     # Try to find and delete the grade
     try:
-        material = LectureMaterial.objects.get(lecture_id=material_id)
+        material = LectureMaterial.objects.get(pk=material_id)
         material.delete()
 
         LectureMaterialsLogs.objects.create(
