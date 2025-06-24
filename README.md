@@ -36,11 +36,17 @@
 
 ## Technical Stack
 
-### 1. Development Framework
-- Django (Python)
+### 1. Frontend Technologies
+- HTML
+- CSS
+- Bootstrap
 
-### 2. Database
-- SQLite (Development)
+### 2. Backend Technologies
+- Python
+- Django
 
-### 3. Hosting Platform
+### 3. Database
+- SQLite
+
+### 4. Deployment Platform
 - PythonAnywhere
